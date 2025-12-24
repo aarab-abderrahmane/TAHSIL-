@@ -1,0 +1,208 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>تحصيل - حاسبة البكالوريا الذكية</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- IBM Plex Sans Arabic (UI), Amiri (Reading), Tajawal (Headings) -->
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              // Paper Theme (Light) - Updated to 'Warm Stone' for eye comfort
+              paper: '#EFEEE9',     // Softer, darker beige/grey (was #FDFBF7)
+              paperDark: '#E4E3DE', // Darker shade for gradients
+              
+              // Deep Dark Theme
+              deep: '#1C1917',     // Stone 900
+              deepSurface: '#292524', // Stone 800
+              
+              // Accents (Nature & Premium)
+              olive: {
+                DEFAULT: '#556B2F', // Dark Olive Green
+                light: '#8FBC8F',
+                dark: '#384A1F',
+              },
+              amber: {
+                DEFAULT: '#D4AF37', // Metallic Gold
+                glow: '#FFBF00',
+              },
+              ai: {
+                DEFAULT: '#6366F1', // Indigo
+                purple: '#8B5CF6',
+              },
+              
+              // Text
+              ink: '#2C2825',       // Soft Black
+              inkLight: '#57534E',  // Stone 500
+              
+              // Functional
+              success: '#10B981', // Emerald
+              danger: '#EF4444',
+            },
+            fontFamily: {
+              sans: ['"IBM Plex Sans Arabic"', 'sans-serif'],
+              heading: ['"Tajawal"', 'sans-serif'],
+              serif: ['"Amiri"', 'serif'],
+            },
+            borderRadius: {
+              '4xl': '2rem',
+              '5xl': '2.5rem',
+            },
+            animation: {
+              'fade-in': 'fadeIn 0.6s ease-out forwards',
+              'fade-in-up': 'fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+              'float': 'float 6s ease-in-out infinite',
+              'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+              'shimmer': 'shimmer 2.5s infinite linear',
+              'glow-pulse': 'glowPulse 2s infinite ease-in-out',
+            },
+            keyframes: {
+              fadeIn: {
+                '0%': { opacity: '0' },
+                '100%': { opacity: '1' },
+              },
+              fadeInUp: {
+                '0%': { opacity: '0', transform: 'translateY(30px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
+              },
+              float: {
+                '0%, 100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-10px)' },
+              },
+              shimmer: {
+                '0%': { transform: 'translateX(-200%) rotate(30deg)' },
+                '100%': { transform: 'translateX(200%) rotate(30deg)' }
+              },
+              glowPulse: {
+                '0%, 100%': { boxShadow: '0 0 15px rgba(16, 185, 129, 0.4)' },
+                '50%': { boxShadow: '0 0 35px rgba(16, 185, 129, 0.7)' }
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <script  type="module" src="./index.tsx"></script>
+    <style>
+      :root {
+        --pattern-color: rgba(85, 107, 47, 0.04);
+      }
+      .dark {
+        --pattern-color: rgba(255, 255, 255, 0.03);
+      }
+
+      body {
+        font-family: 'IBM Plex Sans Arabic', sans-serif;
+        background-color: #EFEEE9; /* Matches updated 'paper' color */
+        color: #2C2825;
+        transition: background-color 0.5s ease, color 0.5s ease;
+        position: relative;
+        overflow-x: hidden;
+      }
+
+      /* Noise Texture - Slightly increased opacity for better texture/less glare */
+      body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.06'/%3E%3C/svg%3E");
+        pointer-events: none;
+        z-index: 50;
+        opacity: 0.7; 
+      }
+
+      /* Subtle Zellige/Geometric Pattern */
+      .bg-zellige {
+        background-image: radial-gradient(var(--pattern-color) 1px, transparent 1px);
+        background-size: 24px 24px;
+      }
+
+      .dark body {
+        background-color: #1C1917; /* Deep Dark */
+        color: #F5F5F4;
+      }
+      
+      /* Glassmorphism Utilities */
+      .glass {
+        background: rgba(255, 255, 255, 0.6); /* Lower opacity to blend with warm background */
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.4); /* Softer border */
+      }
+      .dark .glass {
+        background: rgba(28, 25, 23, 0.65);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      
+      .glass-card {
+        background: rgba(255, 255, 255, 0.7); /* Much softer white, allows warm bg to come through */
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 4px 20px -5px rgba(44, 40, 37, 0.05); /* Warmer shadow */
+      }
+      .dark .glass-card {
+        background: rgba(41, 37, 36, 0.6); /* deepSurface with opacity */
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+      }
+
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+      @media print {
+        body {
+            background: white !important;
+            color: black !important;
+            overflow: visible !important;
+        }
+        #root {
+            overflow: visible !important;
+        }
+        .print\:hidden {
+            display: none !important;
+        }
+        .glass-card, .glass {
+            background: none !important;
+            border: 1px solid #ddd !important;
+            box-shadow: none !important;
+            backdrop-filter: none !important;
+        }
+        /* Ensure charts and text print cleanly */
+        * {
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "@google/genai": "https://esm.sh/@google/genai@^1.34.0",
+    "react": "https://esm.sh/react@^19.2.3",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react-dom": "https://esm.sh/react-dom@^19.2.3",
+    "react-dom/client": "https://esm.sh/react-dom@^19.2.3/client",
+    "recharts": "https://esm.sh/recharts@^3.6.0",
+    "html2canvas": "https://esm.sh/html2canvas@1.4.1",
+    "jspdf": "https://esm.sh/jspdf@2.5.1",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/"
+  }
+}
+</script>
+</head>
+  <body class="bg-zellige">
+    <div id="root"></div>
+  </body>
+</html>
