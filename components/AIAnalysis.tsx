@@ -1,7 +1,6 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import { AnalysisResult, GradeMap, Stream } from '../types';
-import { analyzeGrades } from '../services/geminiService';
 import { Language, translations } from '../translations';
 import html2canvas from 'html2canvas';
 
@@ -29,10 +28,11 @@ export const AIAnalysis: React.FC<AIAnalysisProps> = ({ grades, stream, level, l
         // const result = await analyzeGrades(grades, stream, level, lang);
         // setData(result);
 
-        const response = await fetch("http://localhost:5000/api/analyze-grades",{
+        const response = await fetch(`${import.meta.env.VITE_TAHSIL_BACKEND_URL}analyze-grades`,{
             method : "POST", 
             headers : {
-                "Content-Type" : "application/json"
+                "Content-Type" : "application/json",
+                "Authorization" : `Bearer ${import.meta.env.VITE_TAHSIL_AUTH_KEY}`
             },
             body : JSON.stringify({grades,stream,level,lang})
 

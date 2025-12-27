@@ -11,7 +11,6 @@ import { CountdownPage } from './components/CountdownPage';
 import { AppStep, Level, Stream, GradeMap, Subject, AnalysisResult } from './types';
 import { STREAMS_1BAC, STREAMS_2BAC, EXTRA_SUBJECTS } from './constants';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
-import { getSchoolSuggestions } from './services/geminiService';
 import { translations, Language } from './translations';
 
 import html2canvas from 'html2canvas';
@@ -443,6 +442,7 @@ const App: React.FC = () => {
       }));
   };
 
+
   const calculateGeneralBacResult = async () => {
       if (!selectedStream) {
           alert(lang === 'ar' ? "الرجاء اختيار الشعبة أولاً" : "Veuillez choisir une filière");
@@ -458,8 +458,27 @@ const App: React.FC = () => {
 
       setIsAnalyzingSchools(true);
       try {
-          const suggestions = await getSchoolSuggestions(avg, selectedStream.name, examYear, lang);
-          setSchoolAnalysis(suggestions);
+        //   const suggestions = await getSchoolSuggestions(avg, selectedStream.name, examYear, lang);
+        //   setSchoolAnalysis(suggestions);
+
+        const response = await fetch(`${import.meta.env.VITE_TAHSIL_BACKEND_URL}school-suggestions`,{
+            method : "POST", 
+            headers : {
+                "Content-Type" : "application/json",
+                "Authorization" : `Bearer ${import.meta.env.VITE_TAHSIL_AUTH_KEY}`
+            },
+            body : JSON.stringify({avg,stream: selectedStream.name,examYear,lang})
+
+        }); 
+
+        if(!response.ok){
+            throw new Error('Failed to fetch analysis')
+
+        }
+        const suggestions = await response.json()
+        setSchoolAnalysis(suggestions);
+
+
       } catch (err) {
           console.error(err);
       } finally {
