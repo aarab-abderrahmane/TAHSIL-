@@ -1,4 +1,4 @@
-import { Stream, Subject } from './types';
+import { Stream, Subject ,national_exam_subjects} from './types';
 
 export const EXTRA_SUBJECTS: Subject[] = [
   { id: 'info', name: 'المعلوميات (Informatique)', coefficient: 2 },
@@ -25,8 +25,14 @@ export const STREAMS_2BAC: Stream[] = [
       { id: 'islamic', name: 'التربية الإسلامية', coefficient: 2 },
       { id: 'history', name: 'التاريخ والجغرافيا', coefficient: 2 },
 
+    ],
+    national_exam_subjects: [
+      { id: 'math', name: 'الرياضيات', coefficient: 7 },
+      { id: 'pc', name: 'الفيزياء والكيمياء', coefficient: 7 },
+      { id: 'svt', name: 'علوم الحياة والأرض', coefficient: 5 },
+      { id: 'philo', name: 'الفلسفة', coefficient: 2 },
+      { id: 'eng', name: 'اللغة الإنجليزية', coefficient: 2 },
     ]
-
 
   },
   {

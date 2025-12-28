@@ -493,7 +493,7 @@ const App: React.FC = () => {
       let totalCoeffs = 0;
       let hasError = false;
 
-      selectedStream.subjects.forEach(sub => {
+      selectedStream.national_exam_subjects?.forEach(sub => {
           const gradeStr = nationalExamGrades[sub.id];
           if (gradeStr && gradeStr !== '') {
               totalScore += parseFloat(gradeStr) * sub.coefficient;
@@ -946,7 +946,7 @@ const App: React.FC = () => {
                 {/* Background Image with Dark Overlay */}
                 <div className="absolute inset-0 z-0">
                   <img 
-                  src='./assets/988e6ecabc6330f9c95a0ba9807422f5.jpg'
+                  src='/assets/988e6ecabc6330f9c95a0ba9807422f5.jpg'
                     alt="Education" 
                     className="w-full h-full object-cover grayscale-[20%] group-hover:scale-110 group-hover:grayscale-0 transition-all duration-1000"
                   />
@@ -973,7 +973,7 @@ const App: React.FC = () => {
               >
                 <div className="absolute inset-0 z-0 pointer-events-none">
                   <img 
-                    src='./assets/Two Photos .jpeg'
+                    src='/assets/Two Photos .jpeg'
                     alt="Study Focus" 
                     className="w-full h-full  object-cover grayscale-[20%] group-hover:scale-110 group-hover:grayscale-0 transition-all duration-1000"
                   />
@@ -1013,7 +1013,7 @@ const App: React.FC = () => {
               >
                 <div className="absolute inset-0 z-0">
                   <img 
-                  src='./assets/2e5fb94fca0c970f0dccdda6d1a324b0.jpg'
+                  src='/assets/2e5fb94fca0c970f0dccdda6d1a324b0.jpg'
                     alt="Custom Path" 
                     className="w-full h-full object-cover grayscale-[20%] group-hover:scale-110 group-hover:grayscale-0 transition-all duration-1000"
                   />
@@ -1310,7 +1310,7 @@ const App: React.FC = () => {
                     </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-10">
-                    {selectedStream.subjects.map((subject) => (
+                    {selectedStream.national_exam_subjects?.map((subject) => (
                         <div key={subject.id} className="glass-card rounded-[2rem] p-6 flex flex-row items-center justify-between gap-4 transition-all duration-500 hover:-translate-y-1 hover:shadow-lg">
                             <div className="flex-1 text-start">
                                 <h3 className="font-heading font-bold text-lg text-ink dark:text-gray-100 mb-1">{subject.name}</h3>

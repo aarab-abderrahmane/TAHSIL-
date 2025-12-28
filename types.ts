@@ -10,10 +10,17 @@ export interface Subject {
   isCustom?: boolean;      // New: Identify custom subjects
 }
 
+export interface national_exam_subjects {
+  id: string;
+  name: string;
+  coefficient: number;
+}
+
 export interface Stream {
   id: string;
   name: string;
   subjects: Subject[];
+  national_exam_subjects?: national_exam_subjects[];
 }
 
 export interface Assessment {
