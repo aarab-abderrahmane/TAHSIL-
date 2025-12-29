@@ -1,6 +1,8 @@
 
 import React from 'react';
 import { translations, Language } from '../translations';
+import {PrivacyPolicy} from './PrivacyPolicy';
+import { Link } from 'react-router-dom';
 
 interface LandingPageProps {
   onStart: () => void;
@@ -33,15 +35,28 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onStart, lang }) => {
         </p>
 
         <div className="flex flex-col sm:flex-row gap-6 animate-fade-in-up opacity-0 items-center justify-center w-full sm:w-auto" style={{ animationDelay: '0.6s' }}>
-          <button 
-            onClick={onStart}
+            <Link to="/app" >
+
+                      <button 
+                    // onClick={onStart}
+                    className="group relative px-10 py-5 bg-deep dark:bg-white text-white dark:text-deep rounded-full font-heading font-bold text-xl shadow-2xl hover:scale-105 transition-all duration-300 overflow-hidden w-full sm:w-auto"
+                >
+                    <span className="relative flex items-center justify-center gap-3">
+                    {t.startJourney}
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-6 h-6 rtl:rotate-180 ltr:rotate-0"><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5-7.5M21 12H3" /></svg>
+                    </span>
+                </button>
+            
+            </Link>
+          {/* <button 
+            // onClick={onStart}
             className="group relative px-10 py-5 bg-deep dark:bg-white text-white dark:text-deep rounded-full font-heading font-bold text-xl shadow-2xl hover:scale-105 transition-all duration-300 overflow-hidden w-full sm:w-auto"
           >
             <span className="relative flex items-center justify-center gap-3">
                {t.startJourney}
                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-6 h-6 rtl:rotate-180 ltr:rotate-0"><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5-7.5M21 12H3" /></svg>
             </span>
-          </button>
+          </button> */}
 
           <a href="#" className="group/android relative px-8 py-5 bg-gradient-to-b from-[#10B981] via-[#10B981] to-[#059669] rounded-full font-heading font-bold text-xl text-white animate-glow-pulse hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3 w-full sm:w-auto overflow-hidden shadow-[0_0_20px_rgba(16,185,129,0.5)]">
              {/* Glossy Top Highlight */}
@@ -216,7 +231,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onStart, lang }) => {
                 <ul className="space-y-4 font-serif text-lg text-inkLight dark:text-gray-400">
                     <li><button className="hover:text-olive transition-all">{t.home}</button></li>
                     <li><button onClick={scrollToFeatures} className="hover:text-olive transition-all">{t.featuresLabel}</button></li>
-                    <li><button className="hover:text-olive transition-all">{t.privacy}</button></li>
+                    <li><button className="hover:text-olive transition-all" >{t.privacy}</button></li>
                 </ul>
             </div>
             <div className="text-start">
