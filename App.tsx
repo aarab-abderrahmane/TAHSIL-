@@ -17,6 +17,7 @@ import html2canvas from 'html2canvas';
 
 import {Routes, Route} from 'react-router-dom';
 import { MainApp } from './components/MainAPP';
+import PrivacyPolicy from './components/PrivacyPolicy';
 
 const App: React.FC = () => {
   const [lang, setLang] = useState<Language>('ar');
@@ -842,7 +843,7 @@ const App: React.FC = () => {
   const isSimImpossible = simResult.type === 'needed' && simResult.val > 20;
 
   return (
-    <div className="min-h-screen pb-20 relative print:pb-0 print:overflow-visible overflow-x-hidden">
+    <div className="min-h-screen  relative print:pb-0 print:overflow-visible overflow-x-hidden">
       <div className="fixed top-0 left-0 w-[500px] h-[500px] bg-olive/10 dark:bg-olive/5 rounded-full blur-[120px] -translate-x-1/2 -translate-y-1/2 pointer-events-none animate-float print:hidden"></div>
       <div className="fixed bottom-0 right-0 w-[600px] h-[600px] bg-amber/10 dark:bg-amber/5 rounded-full blur-[150px] translate-x-1/2 translate-y-1/3 pointer-events-none animate-pulse-slow print:hidden"></div>
       
@@ -852,6 +853,7 @@ const App: React.FC = () => {
 
         <Routes>
             <Route path="/" element={<LandingPage onStart={handleStartApp} lang={lang} />} />
+            <Route path="/privacy" element={<PrivacyPolicy  lang={lang}/>} />
             <Route path="/app" element={
                 <MainApp 
                     // Main Props
@@ -973,6 +975,7 @@ const App: React.FC = () => {
                 />
             } />
         </Routes>
+
 
       
  

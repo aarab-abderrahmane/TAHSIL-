@@ -1,13 +1,15 @@
 
 import React, { useState, useEffect, useRef } from 'react';
+
 import { translations, Language } from '../translations';
+import { Link } from 'react-router-dom';
 
 interface PrivacyPolicyProps {
   onBack: () => void;
   lang: Language;
 }
 
-export const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack, lang }) => {
+export const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({  lang }) => {
   const t = translations[lang];
   const [readingProgress, setReadingProgress] = useState(0);
   const [activeSection, setActiveSection] = useState('intro');
@@ -69,9 +71,9 @@ export const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack, lang }) =>
       </div>
 
       {/* Professional Minimalist Header */}
-      <nav className="sticky top-0 z-[100] glass border-b border-gray-200/50 dark:border-white/5 py-4 px-6 md:px-12 flex items-center justify-between transition-all duration-300">
-        <button 
-          onClick={onBack} 
+      <nav className="sticky top-0 z-50 glass border-b border-gray-200/50 dark:border-white/5 py-4 px-6 md:px-12 flex items-center justify-between transition-all duration-300">
+        {/* <button 
+        //   onClick={onBack}   
           className="group flex items-center gap-3 px-4 py-2 rounded-2xl hover:bg-black/5 dark:hover:bg-white/5 transition-all active:scale-95"
         >
           <div className="w-8 h-8 rounded-full bg-olive/10 flex items-center justify-center text-olive transition-transform group-hover:-translate-x-1 rtl:group-hover:translate-x-1">
@@ -80,12 +82,16 @@ export const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack, lang }) =>
             </svg>
           </div>
           <span className="font-heading font-bold text-ink dark:text-white text-sm hidden sm:inline">{t.back}</span>
-        </button>
+        </button> */}
+        <p></p>
+        
+        <Link to="/">
+            <div className="flex items-center gap-3">
+             <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-olive to-olive-dark text-white flex items-center justify-center font-heading font-black text-lg shadow-lg rotate-3">ت</div>
+             <span className="font-heading font-black text-ink dark:text-white tracking-tight">{t.appName}</span>
+            </div>
+        </Link>
 
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-olive to-olive-dark text-white flex items-center justify-center font-heading font-black text-lg shadow-lg rotate-3">ت</div>
-          <span className="font-heading font-black text-ink dark:text-white tracking-tight">{t.appName}</span>
-        </div>
 
         <div className="hidden md:flex items-center gap-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest">
           {lang === 'ar' ? 'تحصيل - الأمان أولاً' : 'Tahsil - Privacy First'}

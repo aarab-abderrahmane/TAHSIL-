@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Language } from '../translations';
+import { Link } from 'react-router-dom';
 
 interface HeaderProps {
     darkMode: boolean;
@@ -42,15 +43,18 @@ export const Header: React.FC<HeaderProps> = ({ darkMode, toggleDarkMode, lang, 
   }, []);
 
   return (
-    <header className="sticky top-6 z-50 px-4 print:hidden animate-fade-in-up pointer-events-none mb-6">
+    <header className="fixed   top-6 z-[100] px-4 print:hidden animate-fade-in-up pointer-events-none mb-6">
       <div className="max-w-5xl mx-auto flex justify-start items-center">
           <div className="pointer-events-auto relative rounded-full glass p-2 pr-4 pl-2 shadow-2xl border border-white/60 dark:border-white/10 flex items-center gap-2 overflow-visible transition-all duration-300">
                 
+                 <Link to="/">
+
                 <div className="flex items-center gap-3 relative z-10 pl-2">
                     <div className="relative w-10 h-10 flex items-center justify-center bg-gradient-to-br from-olive to-olive-dark rounded-full shadow-lg shadow-olive/30 text-white shrink-0">
                         <span className="font-heading font-bold text-lg pt-1">{lang === 'ar' ? 'ت' : 'T'}</span>
                     </div>
                 </div>
+                </Link>
 
                 <div className="h-6 w-[1px] bg-gray-200 dark:bg-gray-700 mx-1"></div>
 

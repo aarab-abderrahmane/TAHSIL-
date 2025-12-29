@@ -1,5 +1,4 @@
 
-
 export type Language = 'ar' | 'fr';
 
 export const translations = {
@@ -165,6 +164,18 @@ export const translations = {
     examDateValue: '2 يونيو',
     timeLeft: 'الوقت المتبقي',
     openCountdown: 'عداد الامتحان',
+    // Privacy Policy
+    privacyTitle: 'سياسة الخصوصية والأمان',
+    privacyIntro: 'نحن في منصة "تحصيل" نؤمن بأن بياناتك الدراسية ملك لك وحدك. إليك كيف نتعامل معها:',
+    privacyDataTitle: 'جمع البيانات ومعالجتها',
+    privacyDataDesc: 'تطبيق تحصيل هو تطبيق واجهة أمامية (Frontend-only). جميع النقط والبيانات التي تدخلها يتم تخزينها محلياً على جهازك فقط (Local Storage). نحن لا نمتلك خوادم (Servers) لتخزين بياناتك الشخصية ولا نطلب منك إنشاء حساب.',
+    privacyAITitle: 'الذكاء الاصطناعي (Gemini API)',
+    privacyAIDesc: 'عند استخدام خاصية "التحليل الذكي"، يتم إرسال النقط المدخلة إلى نموذج Gemini بشكل مجهول (Anonymous) للحصول على التحليل الأكاديمي. لا يتم إرسال أي معلومات تعريفية شخصية.',
+    privacyCookiesTitle: 'ملفات التخزين المحلي',
+    privacyCookiesDesc: 'نستخدم الذاكرة المحلية لمتصفحك لحفظ "القوالب المخصصة" و"اللغة المفضلة" و"الوضع الليلي"، لضمان عدم فقدان عملك عند إغلاق المتصفح.',
+    privacyRightsTitle: 'حقوقك',
+    privacyRightsDesc: 'بما أن البيانات مخزنة في متصفحك، يمكنك مسحها بالكامل في أي وقت عن طريق مسح بيانات المتصفح أو الضغط على زر "حذف الكل" داخل التطبيق.',
+    privacyContactDesc: 'إذا كان لديك أي استفسار حول الخصوصية، يمكنك التواصل معنا عبر البريد الإلكتروني.',
   },
   fr: {
     appName: 'Tahsil',
@@ -328,5 +339,17 @@ export const translations = {
     examDateValue: '2 Juin',
     timeLeft: 'Temps Restant',
     openCountdown: 'Chrono Examen',
+    // Privacy Policy
+    privacyTitle: 'Confidentialité et Sécurité',
+    privacyIntro: 'Chez Tahsil, nous pensons que vos données académiques vous appartiennent. Voici comment nous les traitons :',
+    privacyDataTitle: 'Collecte et Traitement',
+    privacyDataDesc: 'L\'application Tahsil est une application côté client (Frontend-only). Toutes les notes et données sont stockées localement sur votre appareil (Local Storage). Nous n\'avons pas de serveurs pour stocker vos données personnelles et aucune inscription n\'est requise.',
+    privacyAITitle: 'Intelligence Artificielle (Gemini API)',
+    privacyAIDesc: 'Lors de l\'utilisation de l\'analyse intelligente, vos notes sont envoyées de manière anonyme à l\'API Gemini pour obtenir l\'analyse. Aucune information personnelle n\'est transmise.',
+    privacyCookiesTitle: 'Stockage Local',
+    privacyCookiesDesc: 'Nous utilisons le Local Storage de votre navigateur pour sauvegarder vos modèles, votre langue et vos préférences d\'affichage.',
+    privacyRightsTitle: 'Vos Droits',
+    privacyRightsDesc: 'Comme les données sont stockées sur votre appareil, vous pouvez les supprimer à tout moment en vidant le cache du navigateur ou en utilisant le bouton "Tout supprimer" dans l\'application.',
+    privacyContactDesc: 'Pour toute question relative à la confidentialité, contactez-nous par e-mail.',
   }
 };
