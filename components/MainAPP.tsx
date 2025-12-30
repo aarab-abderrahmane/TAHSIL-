@@ -1019,10 +1019,10 @@ export const MainApp : React.FC<MainAppProps> = ({
                 return <GradeInputRow key={subject.id} subject={subject} assessments={grades[subject.id]?.assessments || []} activitiesMark={grades[subject.id]?.activitiesMark} isPending={grades[subject.id]?.isPending} onUpdate={handleUpdateGrades} onDeleteSubject={!isBaseSubject ? () => handleDeleteSubject(subject.id) : undefined} lang={lang} onUpdateSubjectDetails={handleUpdateSubjectDetails} />;
               })}
             </div>
-            <div className={`mb-10 p-6 glass-card rounded-[2rem] border border-dashed border-gray-300 dark:border-gray-600 flex flex-col lg:flex-row items-end lg:items-center gap-4 justify-between relative transition-all duration-300 ${isExtraDropdownOpen ? 'z-50' : 'z-10'}`}>
+            <div className={`mb-10 p-6 bg-gray-300 dark:bg-gray-950 rounded-[2rem] border border-dashed border-gray-300 dark:border-gray-600 flex flex-col lg:flex-row items-end gap-4 justify-between relative transition-all duration-300 ${isExtraDropdownOpen ? 'z-50' : 'z-10'}`}>
                 <div className="flex-1 w-full lg:w-auto relative text-start" ref={dropdownRef}>
                     <label className="block text-sm font-medium text-inkLight dark:text-gray-400 mb-2">{t.extraSubject}</label>
-                    <div onClick={() => setIsExtraDropdownOpen(!isExtraDropdownOpen)} className="w-full h-14 px-5 rounded-2xl bg-white/50 dark:bg-black/20 border transition-all cursor-pointer flex items-center justify-between text-ink dark:text-gray-100 select-none">
+                    <div onClick={() => setIsExtraDropdownOpen(!isExtraDropdownOpen)} className="w-full h-14 px-5 rounded-2xl bg-white/80 dark:bg-gray-800  transition-all cursor-pointer flex items-center justify-between text-ink dark:text-gray-100 select-none">
                         <span className={!subjectToAdd ? 'text-gray-400' : ''}>{getSelectedSubjectName()}</span>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className={`w-5 h-5 text-gray-400 transition-transform ${isExtraDropdownOpen ? 'rotate-180' : ''}`}><path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
                     </div>
@@ -1039,7 +1039,7 @@ export const MainApp : React.FC<MainAppProps> = ({
                 </div>
                 <div className="w-full lg:w-32 text-start">
                     <label className="block text-sm font-medium text-inkLight dark:text-gray-400 mb-2">{t.coefficient}</label>
-                    <input type="text" inputMode="decimal" value={customCoefficient} onChange={(e) => { if (/^\d*\.?\d*$/.test(e.target.value)) setCustomCoefficient(e.target.value); }} className="w-full h-14 px-6 rounded-2xl bg-white/50 dark:bg-black/20 border text-center outline-none" placeholder="1" />
+                    <input type="text" inputMode="decimal" value={customCoefficient} onChange={(e) => { if (/^\d*\.?\d*$/.test(e.target.value)) setCustomCoefficient(e.target.value); }} className="w-full h-14 px-6 rounded-2xl bg-white/80 dark:bg-gray-800 text-center outline-none" placeholder="1" />
                 </div>
                 <button onClick={handleAddExtraSubject} disabled={!subjectToAdd} className="w-full lg:w-auto h-14 px-8 rounded-2xl bg-olive text-white font-bold disabled:opacity-50">
                     <span>{t.addSubject}</span>
