@@ -308,7 +308,7 @@ export const MainApp : React.FC<MainAppProps> = ({
 
 
            
-      <main className="container mx-auto px-4 py-8 mt-20 md:mt-0 max-w-5xl relative z-10">
+      <main className="container mx-auto px-4 py-8 mt-20 xl:mt-10 max-w-5xl relative z-10">
         <div className="print:hidden">
             {currentStep !== AppStep.CUSTOM_MODE && currentStep !== AppStep.CUSTOM_EXAM_MODE && currentStep !== AppStep.CUSTOM_CHOICE && currentStep !== AppStep.COUNTDOWN && <Stepper currentStep={currentStep} isGeneralMode={calcMode === 'general'} lang={lang} />}
         </div>

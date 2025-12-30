@@ -19,6 +19,8 @@ import {Routes, Route} from 'react-router-dom';
 import { MainApp } from './components/MainAPP';
 import PrivacyPolicy from './components/PrivacyPolicy';
 
+import axios from 'axios';
+
 const App: React.FC = () => {
   const [lang, setLang] = useState<Language>('ar');
   const [currentStep, setCurrentStep] = useState<AppStep>(AppStep.LEVEL_SELECT);
@@ -462,24 +464,20 @@ const App: React.FC = () => {
 
       setIsAnalyzingSchools(true);
       try {
-        //   const suggestions = await getSchoolSuggestions(avg, selectedStream.name, examYear, lang);
-        //   setSchoolAnalysis(suggestions);
+        
 
-        const response = await fetch(`${import.meta.env.VITE_TAHSIL_BACKEND_URL}school-suggestions`,{
-            method : "POST", 
-            headers : {
-                "Content-Type" : "application/json",
-                "Authorization" : `Bearer ${import.meta.env.VITE_TAHSIL_AUTH_KEY}`
-            },
-            body : JSON.stringify({avg,stream: selectedStream.name,examYear,lang})
+        const response = await axios.post(
+            `${import.meta.env.VITE_TAHSIL_BACKEND_URL}school-suggestions`,
+            {avg,stream: selectedStream.name,examYear,lang},
+            {
+                headers: {
+                    Authorization: `Bearer ${import.meta.env.VITE_TAHSIL_AUTH_KEY}`,
+                    "Content-Type" : "application/json",
+                }
+            }
+        )
 
-        }); 
-
-        if(!response.ok){
-            throw new Error('Failed to fetch analysis')
-
-        }
-        const suggestions = await response.json()
+        const suggestions = await response.data
         setSchoolAnalysis(suggestions);
 
 
