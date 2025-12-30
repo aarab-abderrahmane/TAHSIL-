@@ -237,6 +237,16 @@ export const MainApp : React.FC<MainAppProps> = ({
 
     const t = translations[lang];
 
+    const cardSubjectsCount = (stream: Stream) => {
+        if(calcMode=== 'regional_exam'){
+           return stream.regional_exam_subjects.length
+        }else if(calcMode=== 'national_exam'){
+            return stream.national_exam_subjects.length
+        }else{
+           return  stream.subjects.length
+        }
+    }
+    
     return (
         <>
         {/* Custom Mode Intro Modal */}
@@ -650,7 +660,7 @@ export const MainApp : React.FC<MainAppProps> = ({
                                 <div className="mt-auto">
                                     <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/50 dark:bg-black/40 border border-white/20 shadow-inner group-hover:border-white/50 transition-all">
                                         <span className={`text-xs font-black uppercase tracking-widest ${theme.iconColor}`}>
-                                            {stream.subjects.length} {lang === 'ar' ? 'مواد دراسية' : 'Matières'}
+                                           {cardSubjectsCount(stream)}  {lang === 'ar' ? 'مواد دراسية' : 'Matières'}
                                         </span>
                                     </div>
                                 </div>
@@ -725,8 +735,9 @@ export const MainApp : React.FC<MainAppProps> = ({
                         {lang === 'ar' ? selectedStream.name : (selectedStream.id.toUpperCase())} - {t.regionalExam}
                     </div>
                 </div>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-10">
-                    {selectedStream.subjects.filter(s => ['fr', 'ar', 'hg', 'ei'].includes(s.id)).map((subject) => (
+                    {selectedStream.regional_exam_subjects?.map(subject=> (
                         <div key={subject.id} className="glass-card rounded-[2rem] p-6 flex flex-row items-center justify-between gap-4 transition-all duration-500 hover:-translate-y-1 hover:shadow-lg">
                             <div className="flex-1 text-start">
                                 <h3 className="font-heading font-bold text-lg text-ink dark:text-gray-100 mb-1">{subject.name}</h3>

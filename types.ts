@@ -16,11 +16,18 @@ export interface national_exam_subjects {
   coefficient: number;
 }
 
+export interface regional_exam_subjects {
+  id: string; 
+  name : string;
+  coefficient : number;
+}
+
 export interface Stream {
   id: string;
   name: string;
   subjects: Subject[];
   national_exam_subjects?: national_exam_subjects[];
+  regional_exam_subjects?: regional_exam_subjects[];
 }
 
 export interface Assessment {

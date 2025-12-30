@@ -54,7 +54,7 @@ export const Stepper: React.FC<StepperProps> = ({ currentStep, isGeneralMode, la
             
             return (
                 <div key={step.id} className="flex flex-col items-center group cursor-default relative">
-                    <div className={`relative w-9 h-9 md:w-11 md:h-11 rounded-full flex items-center justify-center text-[10px] md:text-sm font-bold transition-all duration-500 border-[3px] ${isCurrent ? 'bg-olive text-white border-white dark:border-deepSurface scale-110' : isCompleted ? 'bg-olive text-white border-white' : 'bg-gray-50 text-gray-300 dark:bg-deepSurface'}`}>
+                    <div className={`relative w-9 h-9 md:w-11 md:h-11 rounded-full flex items-center justify-center text-[10px] md:text-sm font-bold transition-all duration-500 border-[3px]  ${isCurrent ? 'bg-olive text-white border-white dark:border-deepSurface scale-110' : isCompleted ? 'bg-olive text-white border-white' : 'bg-gray-50 text-gray-300 dark:bg-deepSurface border-none'}`}>
                         {isCompleted ? (
                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 md:w-5 md:h-5"><path fillRule="evenodd" d="M19.916 4.626a.75.75 0 01.208 1.04l-9 13.5a.75.75 0 01-1.154.114l-6-6a.75.75 0 011.06-1.06l5.353 5.353 8.493-12.739a.75.75 0 011.04-.208z" clipRule="evenodd" /></svg>
                         ) : (<span>{index + 1}</span>)}
