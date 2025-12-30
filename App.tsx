@@ -13,6 +13,8 @@ import { STREAMS_1BAC, STREAMS_2BAC, EXTRA_SUBJECTS } from './constants';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import { translations, Language } from './translations';
 
+import {NotFound} from './components/NotFound';
+
 import html2canvas from 'html2canvas';
 
 import {Routes, Route} from 'react-router-dom';
@@ -850,6 +852,7 @@ const App: React.FC = () => {
       <Header darkMode={darkMode} toggleDarkMode={toggleDarkMode} lang={lang} setLang={setLang} />
 
         <Routes>
+            <Route path="*" element={<NotFound lang={lang} />}></Route>
             <Route path="/" element={<LandingPage onStart={handleStartApp} lang={lang} />} />
             <Route path="/privacy" element={<PrivacyPolicy  lang={lang}/>} />
             <Route path="/app" element={
