@@ -22,29 +22,65 @@ export const SubjectSimulator: React.FC<SubjectSimulatorProps> = ({ onBack, lang
   const [grades, setGrades] = useState<Record<string, string>>({});
   const [disabledGrades, setDisabledGrades] = useState<Record<string, boolean>>({});
 
+
+
+   const  handleChange = (e: React.ChangeEvent<HTMLInputElement>, i: string) => {
+    const value = e.target.value;
+    console.log(value)
+
+    console.log(i)
+
+    if(value ===""){
+      setGrades({...grades ,[i] : '' })
+      return;
+    }
+
+    if (!/^\d*\.?\d*$/.test(e.target.value)) return;
+    if (parseFloat(e.target.value) > 20) return; 
+
+    // const updated = assessments.map(a => a.id === id ? { ...a, value } : a);
+    // onUpdate(subject.id, updated, activitiesMark, isPending);
+    setGrades({...grades ,[i] : e.target.value })
+  };
+
+
   const calculateNeeded = () => {
-    const weights = [];
-    const testWeight = (1 - (hasActivities ? actWeight : 0)) / numAssessments;
-    
-    for(let i=0; i<numAssessments; i++) weights.push({ id: `t${i}`, weight: testWeight, type: 'test' });
-    if(hasActivities) weights.push({ id: 'act', weight: actWeight, type: 'activity' });
+    const testWeight = (1 - (hasActivities ? actWeight : 0)) ;
+
 
     let currentScore = 0;
     let missingWeight = 0;
     let disabledId = '';
 
-    weights.forEach(w => {
-      if (disabledGrades[w.id]) {
-        missingWeight += w.weight;
-        disabledId = w.id;
-      } else {
-        currentScore += (parseFloat(grades[w.id]) || 0) * w.weight;
-      }
-    });
+
+
+    const tests=[]
+
+    if(grades){
+      Object.entries(grades).forEach(([key, value]) => {
+        if (disabledGrades[key]) {
+          missingWeight += testWeight;
+          disabledId = key;
+        } else {
+          key==="act" ?  currentScore += (parseFloat(value) || 0) * actWeight : tests.push(parseFloat(value) || 0)
+         
+        }
+      });
+    }
+
+    console.log(grades)
+
+    if(tests.length>0){
+      const sum = tests.reduce((acc,curr)=>acc+curr,0)
+      currentScore+= (sum / tests.length) * testWeight
+    }
 
     if (missingWeight === 0) return { val: currentScore, type: 'result' };
+
     const needed = (target - currentScore) / missingWeight;
+
     return { val: needed, type: 'needed' };
+
   };
 
   const result = calculateNeeded();
@@ -86,9 +122,16 @@ export const SubjectSimulator: React.FC<SubjectSimulatorProps> = ({ onBack, lang
                    <div>
                     <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 block">{lang === 'ar' ? 'الفروض' : 'Devoirs'}</label>
                     <div className="flex bg-white/50 dark:bg-black/20 rounded-xl p-1 h-11 items-center">
-                        <button onClick={() => setNumAssessments(Math.max(1, numAssessments-1))} className="w-8 h-full flex items-center justify-center font-black">-</button>
+                        <button onClick={() => {
+                          if(numAssessments<=1) return;
+                          const updatedGrades =Object.fromEntries( Object.entries(grades).filter(([key,_])=>key!==`t${numAssessments-1}`));
+                          setGrades(updatedGrades)
+                          setNumAssessments(Math.max(1, numAssessments-1))
+                          }} className="w-8 h-full flex items-center justify-center font-black">-</button>
                         <span className="flex-1 text-center font-black">{numAssessments}</span>
-                        <button onClick={() => setNumAssessments(Math.min(5, numAssessments+1))} className="w-8 h-full flex items-center justify-center font-black">+</button>
+                        <button onClick={() => {
+                          setNumAssessments(Math.min(5, numAssessments+1))}
+                          } className="w-8 h-full flex items-center justify-center font-black">+</button>
                     </div>
                    </div>
                 </div>
@@ -142,7 +185,10 @@ export const SubjectSimulator: React.FC<SubjectSimulatorProps> = ({ onBack, lang
                             disabled={disabledGrades[`t${i}`]}
                             type="number" 
                             value={disabledGrades[`t${i}`] ? (result.type === 'needed' ? result.val.toFixed(2) : '...') : (grades[`t${i}`] || '')} 
-                            onChange={e => setGrades({...grades, [`t${i}`]: e.target.value})}
+                            onChange={(e) => {
+                              console.log('onChange triggered'); // Debug
+                              handleChange(e, `t${i}`);
+                            }}
                             placeholder="00.00"
                             className={`w-full h-16 rounded-2xl bg-white dark:bg-black/40 text-center font-heading font-black text-2xl transition-all border-none outline-none ${disabledGrades[`t${i}`] ? 'text-ai bg-ai/5' : 'text-ink dark:text-white'}`}
                         />
@@ -164,7 +210,7 @@ export const SubjectSimulator: React.FC<SubjectSimulatorProps> = ({ onBack, lang
                             disabled={disabledGrades['act']}
                             type="number" 
                             value={disabledGrades['act'] ? (result.type === 'needed' ? result.val.toFixed(2) : '...') : (grades['act'] || '')} 
-                            onChange={e => setGrades({...grades, 'act': e.target.value})}
+                            onChange={e => handleChange(e, "act")}
                             placeholder="00.00"
                             className={`w-full h-16 rounded-2xl bg-white dark:bg-black/40 text-center font-heading font-black text-2xl transition-all border-none outline-none ${disabledGrades['act'] ? 'text-ai bg-ai/5' : 'text-ink dark:text-white'}`}
                         />
