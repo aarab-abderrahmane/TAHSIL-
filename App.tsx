@@ -22,6 +22,7 @@ import { MainApp } from './components/MainAPP';
 import PrivacyPolicy from './components/PrivacyPolicy';
 
 import axios from 'axios';
+import { c } from 'vite/dist/node/moduleRunnerTransport.d-DJ_mE5sf';
 
 const App: React.FC = () => {
   const [lang, setLang] = useState<Language>('ar');
@@ -64,6 +65,7 @@ const App: React.FC = () => {
   const [isTemplateSaved, setIsTemplateSaved] = useState(false);
   const [customType, setCustomType] = useState<'continuous' | 'exam'>('continuous');
   const [activitiesWeight, setActivitiesWeight] = useState<number>(0.25);
+  const [isWeightLocked, setIsWeightLocked] = useState(true);
 
   // State for active subjects
   const [activeSubjects, setActiveSubjects] = useState<Subject[]>([]);
@@ -165,14 +167,25 @@ const App: React.FC = () => {
       
       const initialGrades: GradeMap = {};
       selectedStream.subjects.forEach(subject => {
-        initialGrades[subject.id] = {
-          assessments: [
-            { id: '1', label: lang === 'ar' ? 'فرض 1' : 'Devoir 1', value: '' },
-            { id: '2', label: lang === 'ar' ? 'فرض 2' : 'Devoir 2', value: '' }
-          ],
-          activitiesMark: '',
-          isPending: false
-        };
+        if(subject.id!=="assiduite"){
+            initialGrades[subject.id] = {
+            assessments: [
+                { id: '1', label: lang === 'ar' ? 'فرض 1' : 'Devoir 1', value: '' },
+                { id: '2', label: lang === 'ar' ? 'فرض 2' : 'Devoir 2', value: '' }
+            ],
+            activitiesMark: '',
+            isPending: false
+            };
+        }else{
+            initialGrades[subject.id] = {
+            assessments: [
+                { id: '1', label: lang === 'ar' ? 'النقطة' : 'Note', value: '' },
+            ],
+            activitiesMark: '',
+            isPending: false
+            };
+        }
+
       });
       setGrades(initialGrades);
 
@@ -202,7 +215,9 @@ const App: React.FC = () => {
       setSelectedLevel(level);
       if (level === 'custom') {
           setCurrentStep(AppStep.CUSTOM_CHOICE);
-      } else {
+      }else if(level==='simulator'){
+            setCurrentStep(AppStep.SUBJECT_SIMULATOR)
+      }else {
           setCurrentStep(AppStep.MODE_SELECT);
       }
   };
@@ -288,8 +303,9 @@ const App: React.FC = () => {
   };
 
   const handleUpdateSubjectDetails = (id: string, name: string, coeff: number, hasActivities: boolean) => {
-      setActiveSubjects(prev => prev.map(s => s.id === id ? { ...s, name, coefficient: coeff, hasActivities } : s));
+      setActiveSubjects(prev => prev.map(s => s.id === id ? { ...s, name, coefficient: coeff, hasActivities : id==="assiduite" ? false :hasActivities } : s));
       setIsTemplateSaved(false);
+      
   };
 
   const handleSaveTemplate = () => {
@@ -589,21 +605,29 @@ const App: React.FC = () => {
         return;
     }
 
-    console.log(activeSubjects)
+    // console.log(activeSubjects)
+    // console.log(grades)
     const missingFields = activeSubjects.filter(subject => {
         const data = grades[subject.id];
-        console.log(data)
+        // console.log(data,subject.id)
         if (!data) return true;
         if (data.isPending) return false;
+
+        console.log(data.assessments)
         
         const assessmentsFilled = data.assessments.every(a => a.value.trim() !== '');
         const needsActivities = subject.hasActivities ?? true;
         const activitiesFilled = !needsActivities || (data.activitiesMark !== undefined && data.activitiesMark.trim() !== '');
         
+        console.log(subject.id , assessmentsFilled , subject.hasActivities , activitiesFilled)
+
+        // console.log(subject.id , data , assessmentsFilled , activitiesFilled)
+        if(subject.id==="assiduite") return !assessmentsFilled;
+        
         return !assessmentsFilled || !activitiesFilled;
     });
 
-    console.log(missingFields)
+    console.log("missingfields",missingFields)
 
     if (missingFields.length > 0) {
         setToastMessage(lang === 'ar' ? 'المرجو ملء جميع النقط أو تحديد المادة كـ "غير مكتملة"' : 'Veuillez remplir toutes les notes');
@@ -622,6 +646,10 @@ const App: React.FC = () => {
 
     activeSubjects.forEach(subject => {
       const subjectData = grades[subject.id];
+
+      console.log("subject",subject.id , subject.coefficient)
+      
+      
       absoluteTotalCoeffs += subject.coefficient;
       if (subjectData) {
         if (subjectData.isPending) {
@@ -662,7 +690,7 @@ const App: React.FC = () => {
         }
       }
     });
-
+// console.log("totalPoints",totalPoints , "totalCoeffs",totalCoeffs , absoluteTotalCoeffs)
     const average = totalCoeffs > 0 ? totalPoints / totalCoeffs : 0;
     setCoachData({
         pendingSubjects: pendingSubjectsList,
@@ -855,6 +883,8 @@ const App: React.FC = () => {
                     // Main Props
                     showCustomIntro={showCustomIntro}
                     setShowCustomIntro={setShowCustomIntro}
+                    isWeightLocked={isWeightLocked}
+                    setIsWeightLocked={setIsWeightLocked}
                     lang={lang}
                     darkMode={darkMode}
                     

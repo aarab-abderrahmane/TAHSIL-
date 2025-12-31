@@ -97,11 +97,12 @@ export const GradeInputRow: React.FC<GradeInputRowProps> = ({
   };
 
   const toggleActivities = () => {
+      if (subject.id === "assiduite") return;
       if (onUpdateSubjectDetails) {
           onUpdateSubjectDetails(subject.id, subject.name, subject.coefficient, !(subject.hasActivities ?? true));
       }
   };
-
+console.log(subject.hasActivities)
   const showActivities = isExamMode ? false : (subject.hasActivities ?? true);
 
   return (
@@ -140,7 +141,7 @@ export const GradeInputRow: React.FC<GradeInputRowProps> = ({
                     {isPending ? <span>{t.isPending}</span> : <span>{t.pending}</span>}
                 </button>
                 
-                {!isExamMode && (
+                {!isExamMode &&  subject.id!=="assiduite" && (
                     <button type="button" onClick={toggleActivities} className={`flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold transition-all ${showActivities ? 'bg-olive/10 border border-olive/30 text-olive' : 'bg-gray-100 dark:bg-white/10 text-gray-400'}`}>
                         {showActivities ? (lang === 'ar' ? 'الأنشطة: مفعلة' : 'Activités: ON') : (lang === 'ar' ? 'بدون أنشطة' : 'Sans activités')}
                     </button>
@@ -161,7 +162,7 @@ export const GradeInputRow: React.FC<GradeInputRowProps> = ({
                 </div>
               </div>
             ))}
-            {showActivities && (
+            {showActivities  && subject.id!=="assiduite" &&(
                 <div className="relative text-start animate-fade-in">
                     <label className="block text-xs text-olive mb-2 mr-2 font-medium">{t.activities}</label>
                     <div className="relative">
@@ -169,7 +170,7 @@ export const GradeInputRow: React.FC<GradeInputRowProps> = ({
                     </div>
                 </div>
             )}
-            {!isPending && !isExamMode && assessments.length < 5 && (
+            {!isPending && !isExamMode && assessments.length < 5 && subject.id !== "assiduite" && (
                 <div className="flex items-end">
                     <button type="button" onClick={handleAddAssessment} className="h-14 w-full rounded-2xl border border-dashed border-gray-300 text-gray-400 hover:text-olive hover:bg-olive/5 transition-all flex items-center justify-center gap-2 text-sm font-medium">
                         <span>{t.addAssessment}</span>

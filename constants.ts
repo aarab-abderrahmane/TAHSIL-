@@ -7,7 +7,8 @@ export const EXTRA_SUBJECTS: Subject[] = [
   { id: 'lang_3', name: 'لغة أجنبية ثالثة', coefficient: 2 },
   { id: 'arts', name: 'الفنون التشكيلية', coefficient: 1 },
   { id: 'music', name: 'التربية الموسيقية', coefficient: 1 },
-  { id: 'assiduite', name: 'المواظبة والسلوك', coefficient: 1 },
+      { id: 'assiduite', name: 'المواظبة والسلوك', coefficient: 1 }
+
 ];
 
 export const STREAMS_2BAC: Stream[] = [
@@ -23,7 +24,8 @@ export const STREAMS_2BAC: Stream[] = [
       { id: 'arabic', name: 'اللغة العربية', coefficient: 2 },
       { id: 'french', name: 'اللغة الفرنسية', coefficient: 4 },
       { id: 'islamic', name: 'التربية الإسلامية', coefficient: 2 },
-      { id: 'history', name: 'التاريخ والجغرافيا', coefficient: 2 },
+      { id: 'assiduite', name: 'المواظبة والسلوك', coefficient: 1 }
+
 
     ],
     national_exam_subjects: [
@@ -32,6 +34,7 @@ export const STREAMS_2BAC: Stream[] = [
       { id: 'svt', name: 'علوم الحياة والأرض', coefficient: 5 },
       { id: 'philo', name: 'الفلسفة', coefficient: 2 },
       { id: 'eng', name: 'اللغة الإنجليزية', coefficient: 2 },
+
     ]
 
   },
@@ -47,7 +50,8 @@ export const STREAMS_2BAC: Stream[] = [
       { id: 'arabic', name: 'اللغة العربية', coefficient: 2 },
       { id: 'french', name: 'اللغة الفرنسية', coefficient: 4 },
       { id: 'islamic', name: 'التربية الإسلامية', coefficient: 2 },
-      { id: 'history', name: 'التاريخ والجغرافيا', coefficient: 2 },
+    { id: 'assiduite', name: 'المواظبة والسلوك', coefficient: 1 }
+
     ],
     national_exam_subjects: [
       { id: 'svt', name: 'علوم الحياة والأرض', coefficient: 7 },
@@ -70,6 +74,7 @@ export const STREAMS_2BAC: Stream[] = [
       { id: 'french', name: 'اللغة الفرنسية', coefficient: 4 },
       { id: 'islamic', name: 'التربية الإسلامية', coefficient: 2 },
       { id: 'history', name: 'التاريخ والجغرافيا', coefficient: 2 },
+      { id: 'assiduite', name: 'المواظبة والسلوك', coefficient: 1 }
     ],
     national_exam_subjects: [
       { id: 'math', name: 'الرياضيات', coefficient: 9 },
@@ -117,7 +122,8 @@ export const STREAMS_1BAC: Stream[] = [
       { id: 'eng', name: 'اللغة الإنجليزية', coefficient: 2 },
       { id: 'philo', name: 'الفلسفة', coefficient: 2 },
       { id: 'islamic', name: 'التربية الإسلامية', coefficient: 2 },
-      { id: 'history', name: 'التاريخ والجغرافيا', coefficient: 2 }
+      { id: 'history', name: 'التاريخ والجغرافيا', coefficient: 2 },
+  { id: 'assiduite', name: 'المواظبة والسلوك', coefficient: 1 }
     ],
     regional_exam_subjects: [
       { id: 'arabic', name: 'اللغة العربية', coefficient: 2 },
@@ -141,7 +147,8 @@ export const STREAMS_1BAC: Stream[] = [
       { id: 'islamic', name: 'التربية الإسلامية', coefficient: 2 },
       { id: 'history', name: 'التاريخ والجغرافيا', coefficient: 2 },
       { id: 'pe', name: 'التربية البدنية', coefficient: 1 },
-      { id: 'attendance', name: 'المواظبة والسلوك', coefficient: 1 }
+      { id: 'attendance', name: 'المواظبة والسلوك', coefficient: 1 },
+  { id: 'assiduite', name: 'المواظبة والسلوك', coefficient: 1 }
     ],
     regional_exam_subjects: [
       { id: 'arabic', name: 'اللغة العربية', coefficient: 2 },

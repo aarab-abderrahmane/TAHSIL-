@@ -9,9 +9,13 @@ import { AppStep, Level, Stream, Subject, GradeMap } from '../types';
 import { STREAMS_1BAC, STREAMS_2BAC, EXTRA_SUBJECTS } from '../constants';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 
+import {SubjectSimulator} from './SubjectSimulator'
+
 interface MainAppProps {
     showCustomIntro: boolean;
     setShowCustomIntro: (value: boolean) => void;
+    isWeightLocked : boolean ;
+    setIsWeightLocked : (value:boolean) => void ;
     lang: Language;
     // Main Navigation States
     currentStep: AppStep;
@@ -140,6 +144,8 @@ interface MainAppProps {
 export const MainApp : React.FC<MainAppProps> = ({
     showCustomIntro,
     setShowCustomIntro,
+    isWeightLocked,
+    setIsWeightLocked,
     lang,
     currentStep,
     setCurrentStep,
@@ -234,7 +240,7 @@ export const MainApp : React.FC<MainAppProps> = ({
     setSelectedLevel = () => {},
     setSelectedStream = () => {},
 })=>{
-
+    console.log(activeSubjects)
     const t = translations[lang];
 
     const cardSubjectsCount = (stream: Stream) => {
@@ -247,6 +253,7 @@ export const MainApp : React.FC<MainAppProps> = ({
         }
     }
     
+    console.log("grades ",grades)
     return (
         <>
         {/* Custom Mode Intro Modal */}
@@ -416,7 +423,7 @@ export const MainApp : React.FC<MainAppProps> = ({
                 </div>
 
                 <div className="relative z-10">
-                  <div className={`absolute top-0 ${lang === 'ar' ? 'left-0' : 'right-0'} -translate-y-[210px]`}>
+                  <div className={`absolute top-0 ${lang === 'ar' ? 'left-0' : 'right-0'}  -translate-y-[240px] lg:-translate-y-[210px]`}>
                     <div className="w-16 h-16 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center border border-white/20 shadow-xl group-hover:bg-ai transition-colors duration-500">
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-8 h-8 text-white">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" />
@@ -427,6 +434,36 @@ export const MainApp : React.FC<MainAppProps> = ({
                   <p className="text-base text-gray-300 font-serif leading-relaxed opacity-90">{t.customStreamDesc}</p>
                 </div>
               </button>
+
+               {/* Card 1: subject simulator */}
+              <button
+                onClick={() => handleSelectLevel('simulator')}
+                className="group relative overflow-hidden rounded-[2.5rem] text-start transition-all duration-700  hover:-translate-y-2 border border-white/40 dark:border-white/10 h-[380px] flex flex-col justify-end p-8"
+              >
+                {/* Background Image with Dark Overlay */}
+                <div className="absolute inset-0 z-0">
+                  <img 
+                  src='/assets/Download Accounting Concept 3d.jpeg'
+                    alt="Education" 
+                    className="w-full h-full object-cover grayscale-[20%] group-hover:scale-110 group-hover:grayscale-0 transition-all duration-1000"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-deep/90 via-deep/40 to-transparent"></div>
+                  <div className="absolute inset-0 bg-olive/10 group-hover:bg-transparent transition-colors duration-700"></div>
+                </div>
+
+                {/* Content Overlay */}
+                <div className="relative z-10">
+                  <div className={`absolute top-0 ${lang === 'ar' ? 'left-0' : 'right-0'} -translate-y-[240px]`}>
+                    <div className="w-16 h-16 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center border border-white/20 shadow-xl group-hover:bg-olive transition-colors duration-500">
+                      <i class="bi bi-bar-chart-line text-4xl"></i>
+                    </div>
+                  </div>
+                  <h3 className="text-2xl md:text-3xl font-heading font-black text-white mb-3 group-hover:text-olive-light transition-colors">{t.firstBac}</h3>
+                  <p className="text-base text-gray-300 font-serif leading-relaxed opacity-90">{t.firstBacDesc}</p>
+                </div>
+              </button>
+
+
             </div>
           </div>
         )}
@@ -542,6 +579,12 @@ export const MainApp : React.FC<MainAppProps> = ({
           </div>
         )}
 
+        {currentStep === AppStep.SUBJECT_SIMULATOR && (
+            <SubjectSimulator lang={lang} 
+            onBack={() => setCurrentStep(AppStep.LEVEL_SELECT)}
+             />
+        )}
+
         {currentStep === AppStep.SIMULATOR && (
             <div className="animate-fade-in-up max-w-4xl mx-auto">
                 <button onClick={() => setCurrentStep(AppStep.MODE_SELECT)} className="mb-8 flex items-center gap-2 text-ai-purple dark:text-ai font-medium hover:opacity-80 transition-opacity">
@@ -634,6 +677,41 @@ export const MainApp : React.FC<MainAppProps> = ({
             <h2 className="text-3xl font-heading font-black text-center mb-4 text-ink dark:text-white">{t.streamSelectTitle}</h2>
             <p className="text-center text-inkLight dark:text-gray-400 mb-12 font-serif text-xl px-4">{t.streamSelectDesc}</p>
             
+             {calcMode === 'continuous' && (
+                <div className="max-w-xl mx-auto mb-16 relative">
+                    <div className="absolute -inset-2 bg-blue-500 from-indigo-100/50 via-white to-teal-50/50 dark:from-white/5 dark:via-transparent dark:to-white/5 rounded-[2.5rem] blur-xl opacity-30"></div>
+                    <div className="relative bg-white/40 dark:bg-black/20 backdrop-blur-xl rounded-[2.5rem] p-5 border border-white/60 dark:border-white/5 shadow-2xl flex flex-col gap-5 overflow-hidden">
+                        <div className="flex items-center justify-between px-2">
+                             <div className="flex items-center gap-3">
+                                 <button onClick={() => setIsWeightLocked(!isWeightLocked)} className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-all ${isWeightLocked ? 'bg-gray-100 text-gray-400' : 'bg-ai text-white shadow-lg pulse'}`}>
+                                     {isWeightLocked ? ( <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4"><path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg> ) : ( <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4"><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 10.5V6.75a4.5 4.5 0 119 0v3.75M3.75 21.75h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H3.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg> )}
+                                 </button>
+                                 <h4 className="font-heading font-black text-ink dark:text-white text-base leading-none">{t.activitiesWeight}</h4>
+                             </div>
+                             <div className="bg-white/80 dark:bg-white/10 px-3 py-1.5 rounded-xl border border-white dark:border-white/5 shadow-sm">
+                                 <span className="text-xl font-heading font-black text-ai tabular-nums">{activitiesWeight.toFixed(2)}</span>
+                             </div>
+                        </div>
+
+                        <div className={`relative px-4 pb-2 transition-all duration-500 ${isWeightLocked ? 'opacity-30 grayscale pointer-events-none' : 'opacity-100'}`}>
+                             <div className="flex justify-between text-[10px] font-black uppercase text-gray-400 mb-2">
+                                 <span>{t.assessmentsWeight} {Math.round((1 - activitiesWeight) * 100)}%</span>
+                                 <span>{t.activitiesWeight} {Math.round(activitiesWeight * 100)}%</span>
+                             </div>
+                             <div className="relative h-10 flex items-center">
+                                 <div className="absolute inset-x-0 h-1.5 bg-gray-100 dark:bg-white/5 rounded-full"></div>
+                                 <div className="absolute right-0 h-1.5 bg-ai rounded-full transition-all duration-300" style={{ width: `${activitiesWeight * 100}%` }}></div>
+                                 <input type="range" min="0.05" max="0.95" step="0.05" value={activitiesWeight} onChange={(e) => setActivitiesWeight(parseFloat(e.target.value))} 
+                                        className="absolute inset-x-0 w-full appearance-none bg-transparent cursor-pointer z-20
+                                                   [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-8 [&::-webkit-slider-thumb]:h-8 
+                                                   [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-[7px] 
+                                                   [&::-webkit-slider-thumb]:border-ai [&::-webkit-slider-thumb]:shadow-lg hover:[&::-webkit-slider-thumb]:scale-110" />
+                             </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                  {(selectedLevel === '1ere_bac' ? STREAMS_1BAC : STREAMS_2BAC).map((stream) => {
                      const theme = getStreamVisuals(stream.id, stream.name);
@@ -653,7 +731,7 @@ export const MainApp : React.FC<MainAppProps> = ({
                                     {theme.icon}
                                 </div>
                                 
-                                <h3 className="text-2xl font-heading font-black text-ink dark:text-white mb-6 leading-tight group-hover:scale-105 transition-transform">
+                                <h3 className="text-2xl  text-center font-heading font-black text-ink dark:text-white mb-6 leading-tight group-hover:scale-105 transition-transform">
                                     {lang === 'ar' ? stream.name : (stream.id.toUpperCase())}
                                 </h3>
                                 
@@ -678,9 +756,9 @@ export const MainApp : React.FC<MainAppProps> = ({
                     
                     <div className="relative z-10 flex flex-col items-center h-full">
                         <div className="w-24 h-24 rounded-[2rem] bg-gradient-to-br from-gray-400 to-slate-600 dark:from-white/10 dark:to-white/5 flex items-center justify-center mb-8 shadow-xl group-hover:from-ai group-hover:to-ai-purple group-hover:scale-110 transition-all duration-500 ring-4 ring-gray-100 dark:ring-white/5">
-                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-10 h-10 text-white"><path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.967 8.967 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" /></svg>
+                             <i class="bi bi-tools text-5xl text-purple-300"></i>
                         </div>
-                        <h3 className="text-2xl font-heading font-black text-ink dark:text-white mb-6 leading-tight group-hover:text-ai transition-colors">{t.customStream}</h3>
+                        <h3 className="text-2xl text-center font-heading font-black text-ink dark:text-white mb-6 leading-tight group-hover:text-ai transition-colors">{t.customStream}</h3>
                         <div className="mt-auto">
                             <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-gray-100/50 dark:bg-black/40 border border-gray-200/50 group-hover:bg-ai/10 group-hover:border-ai/30 transition-all">
                                 <span className="text-xs font-black text-gray-500 group-hover:text-ai uppercase tracking-widest">{t.manualCustom}</span>

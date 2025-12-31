@@ -1,6 +1,6 @@
 
 
-export type Level = '1ere_bac' | '2eme_bac' | 'custom';
+export type Level = '1ere_bac' | '2eme_bac' | 'custom' | 'simulator';
 
 export interface Subject {
   id: string;
@@ -71,5 +71,6 @@ export enum AppStep {
   REGIONAL_EXAM = 9, // New Step for Regional Exam Calculation
   CUSTOM_CHOICE = 10, // New Step for choosing custom type
   CUSTOM_EXAM_MODE = 11, // New Step for Custom Exam Template
-  COUNTDOWN = 12 // New Step for Exam Timer
+  COUNTDOWN = 12, // New Step for Exam Timer
+  SUBJECT_SIMULATOR = 13
 }
