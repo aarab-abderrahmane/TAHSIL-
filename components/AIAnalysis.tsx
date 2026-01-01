@@ -4,6 +4,7 @@ import { AnalysisResult, GradeMap, Stream } from '../types';
 import { Language, translations } from '../translations';
 import html2canvas from 'html2canvas';
 import axios from 'axios';
+import { getFingerprint } from './getFingerPrint';
 
 interface AIAnalysisProps {
   grades: GradeMap;
@@ -28,14 +29,15 @@ export const AIAnalysis: React.FC<AIAnalysisProps> = ({ grades, stream, level, l
     try {
 
 
-
+        const Fingerprint = await getFingerprint()
         const response = await axios.post(
             `${import.meta.env.VITE_TAHSIL_BACKEND_URL}analyze-grades`,
             {grades,stream,level,lang},
             {
                 headers:{
                     Authorization:`Bearer ${import.meta.env.VITE_TAHSIL_AUTH_KEY}`,
-                    "Content-Type":"application/json"
+                    "Content-Type":"application/json",
+                    "X-Device-Fingerprint" :  Fingerprint
                 }
             }
         )

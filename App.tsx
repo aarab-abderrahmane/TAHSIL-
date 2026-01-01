@@ -22,7 +22,7 @@ import { MainApp } from './components/MainAPP';
 import PrivacyPolicy from './components/PrivacyPolicy';
 
 import axios from 'axios';
-import { c } from 'vite/dist/node/moduleRunnerTransport.d-DJ_mE5sf';
+import {getFingerprint} from './components/getFingerPrint'
 
 const App: React.FC = () => {
   const [lang, setLang] = useState<Language>('ar');
@@ -33,6 +33,8 @@ const App: React.FC = () => {
   const [examYear, setExamYear] = useState<string>(new Date().getFullYear().toString());
   
   const t = translations[lang];
+
+
 
   // General Bac Calculation States
   const [nationalGrade, setNationalGrade] = useState<string>('');
@@ -483,6 +485,7 @@ const App: React.FC = () => {
       setIsAnalyzingSchools(true);
       try {
         
+        const Fingerprint = await getFingerprint()
 
         const response = await axios.post(
             `${import.meta.env.VITE_TAHSIL_BACKEND_URL}school-suggestions`,
@@ -490,6 +493,7 @@ const App: React.FC = () => {
             {
                 headers: {
                     Authorization: `Bearer ${import.meta.env.VITE_TAHSIL_AUTH_KEY}`,
+                    "X-Device-Fingerprint" :  Fingerprint, 
                     "Content-Type" : "application/json",
                 }
             }
