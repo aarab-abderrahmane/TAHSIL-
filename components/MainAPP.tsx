@@ -946,7 +946,7 @@ export const MainApp : React.FC<MainAppProps> = ({
                 </div>
 
                  <div className="relative glass-card rounded-[3.5rem] p-10 md:p-14 bg-gradient-to-br from-paper via-white to-paperDark dark:from-deepSurface dark:via-[#2b2726] dark:to-deep flex flex-col md:flex-row items-center justify-between gap-10 border border-amber/20 shadow-2xl overflow-hidden mb-12 z-0 group">
-                    <div className="absolute top-0 right-0 w-64 h-64 bg-amber/5 rounded-full blur-[100px] pointer-events-none transition-all group-hover:bg-amber/10"></div>
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-amber/20 rounded-full blur-[100px] pointer-events-none transition-all group-hover:bg-amber/30"></div>
                     <div className="relative z-10 text-center md:text-start flex-1">
                         <div className="inline-flex items-center gap-2 px-4 py-2 bg-amber/10 rounded-full mb-6 border border-amber/20">
                             <span className="w-2 h-2 rounded-full bg-amber animate-pulse"></span>

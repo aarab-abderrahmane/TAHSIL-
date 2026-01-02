@@ -23,6 +23,7 @@ import PrivacyPolicy from './components/PrivacyPolicy';
 
 import axios from 'axios';
 import {getFingerprint} from './components/getFingerPrint'
+import './index.css'
 
 const App: React.FC = () => {
   const [lang, setLang] = useState<Language>('ar');

@@ -121,3 +121,14 @@
     @apply bg-background text-foreground;
   }
 }
+
+
+
+.wavy-circle {
+  --s: 100px; /* adjust to control the size */
+
+  width: var(--s); 
+  aspect-ratio: 1;
+  --g:/calc(var(--s)*0.201) calc(var(--s)*0.201) radial-gradient(50% 50%,#000 99%,#0000 101%) no-repeat;
+  mask: calc(50% + var(--s)*0.369) calc(50% + var(--s)*0) var(--g),calc(50% + var(--s)*0.261) calc(50% + var(--s)*0.261) var(--g),calc(50% + var(--s)*0) calc(50% + var(--s)*0.369) var(--g),calc(50% + var(--s)*-0.261) calc(50% + var(--s)*0.261) var(--g),calc(50% + var(--s)*-0.369) calc(50% + var(--s)*0) var(--g),calc(50% + var(--s)*-0.261) calc(50% + var(--s)*-0.261) var(--g),calc(50% + var(--s)*0) calc(50% + var(--s)*-0.369) var(--g),calc(50% + var(--s)*0.261) calc(50% + var(--s)*-0.261) var(--g),radial-gradient(calc(var(--s)*0.418),#000 99%,#0000 101%) subtract,calc(50% + var(--s)*0.447) calc(50% + var(--s)*0.185) var(--g),calc(50% + var(--s)*0.185) calc(50% + var(--s)*0.447) var(--g),calc(50% + var(--s)*-0.185) calc(50% + var(--s)*0.447) var(--g),calc(50% + var(--s)*-0.447) calc(50% + var(--s)*0.185) var(--g),calc(50% + var(--s)*-0.447) calc(50% + var(--s)*-0.185) var(--g),calc(50% + var(--s)*-0.185) calc(50% + var(--s)*-0.447) var(--g),calc(50% + var(--s)*0.185) calc(50% + var(--s)*-0.447) var(--g),calc(50% + var(--s)*0.447) calc(50% + var(--s)*-0.185) var(--g);
+}

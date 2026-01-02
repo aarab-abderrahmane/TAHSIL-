@@ -1,6 +1,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { Language, translations } from '../translations';
+import test from 'node:test';
+import { p } from 'motion/react-client';
 
 interface SubjectSimulatorProps {
   onBack: () => void;
@@ -12,7 +14,7 @@ export const SubjectSimulator: React.FC<SubjectSimulatorProps> = ({ onBack, lang
 
   // Config
   const [name, setName] = useState('');
-  const [coeff, setCoeff] = useState('1');
+  const [coeff, setCoeff] = useState(1);
   const [numAssessments, setNumAssessments] = useState(2);
   const [hasActivities, setHasActivities] = useState(true);
   const [actWeight, setActWeight] = useState(0.25);
@@ -26,9 +28,7 @@ export const SubjectSimulator: React.FC<SubjectSimulatorProps> = ({ onBack, lang
 
    const  handleChange = (e: React.ChangeEvent<HTMLInputElement>, i: string) => {
     const value = e.target.value;
-    console.log(value)
 
-    console.log(i)
 
     if(value ===""){
       setGrades({...grades ,[i] : '' })
@@ -43,45 +43,81 @@ export const SubjectSimulator: React.FC<SubjectSimulatorProps> = ({ onBack, lang
     setGrades({...grades ,[i] : e.target.value })
   };
 
+  useEffect(()=>{
+
+      for (let i = 1; i <= numAssessments ; i++){
+          grades[`t${i}`] = grades[`t${i}`] || 0
+      }
+      
+      hasActivities && (grades['act'] = grades['act'] || 0)
+
+
+  },[])
+
+
+
+  const updateCoeff = (value: string) => {
+
+    if (!/^\d*$/.test(value)) return;
+    if (parseFloat(value) <= 0 || parseFloat(value) > 20) return; 
+
+    setCoeff(value);
+
+  }
+
 
   const calculateNeeded = () => {
     const testWeight = (1 - (hasActivities ? actWeight : 0)) ;
 
 
     let currentScore = 0;
-    let missingWeight = 0;
-    let disabledId = '';
+    let tests=[]
 
+    console.log("grades",grades,Object.entries(grades))
 
-
-    const tests=[]
-
+    let missingGrades = {act : false , Cont : false , count : 0}
     if(grades){
       Object.entries(grades).forEach(([key, value]) => {
         if (disabledGrades[key]) {
-          missingWeight += testWeight;
-          disabledId = key;
-        } else {
+
+          console.log("disbledgrades", disabledGrades , key)
+
+          key === "act"?  missingGrades["act"] = true : missingGrades["Cont"] = true 
+
+        } 
           key==="act" ?  currentScore += (parseFloat(value) || 0) * actWeight : tests.push(parseFloat(value) || 0)
          
-        }
       });
     }
 
-    console.log(grades)
 
-    if(tests.length>0){
-      const sum = tests.reduce((acc,curr)=>acc+curr,0)
-      currentScore+= (sum / tests.length) * testWeight
+
+    const sumTests = tests.reduce((acc,curr)=>acc+curr,0)
+    if (missingGrades["Cont"] ){
+
+      const needed = ((target - ((parseFloat(grades['act']) || 0 )*actWeight)) / testWeight ) * tests.length - sumTests
+
+       return { val: needed, type: 'needed' };
+
+    }else{
+
+      if( missingGrades["act"] ){
+          const needed = (((sumTests /tests.length) * testWeight  - target ) / actWeight ) * -1
+         return { val: needed, type: 'needed' };
+
+      }
     }
 
-    if (missingWeight === 0) return { val: currentScore, type: 'result' };
 
-    const needed = (target - currentScore) / missingWeight;
 
-    return { val: needed, type: 'needed' };
+
+    currentScore+= (sumTests / tests.length) * testWeight
+
+    return { type: 'current' , val: currentScore};
+
 
   };
+
 
   const result = calculateNeeded();
   const isImpossible = result.type === 'needed' && result.val > 20;
@@ -117,21 +153,30 @@ export const SubjectSimulator: React.FC<SubjectSimulatorProps> = ({ onBack, lang
                 <div className="grid grid-cols-2 gap-4 text-start">
                    <div>
                     <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 block">{t.coefficient}</label>
-                    <input type="number" value={coeff} onChange={e => setCoeff(e.target.value)} className="w-full h-11 px-4 rounded-xl bg-white/50 dark:bg-black/20 border-none outline-none font-bold text-center" />
+                    <input type="number" value={coeff}  onChange={e => updateCoeff(e.target.value)} 
+                    className="w-full h-11 px-4 rounded-xl bg-white/50 dark:bg-black/20 border-none outline-none font-bold text-center
+                    [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
                    </div>
                    <div>
                     <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 block">{lang === 'ar' ? 'الفروض' : 'Devoirs'}</label>
                     <div className="flex bg-white/50 dark:bg-black/20 rounded-xl p-1 h-11 items-center">
                         <button onClick={() => {
                           if(numAssessments<=1) return;
-                          const updatedGrades =Object.fromEntries( Object.entries(grades).filter(([key,_])=>key!==`t${numAssessments-1}`));
+
+                          const updatedGrades =Object.fromEntries( Object.entries(grades).filter(([key,_])=>key!==`t${numAssessments}`));
                           setGrades(updatedGrades)
                           setNumAssessments(Math.max(1, numAssessments-1))
+
                           }} className="w-8 h-full flex items-center justify-center font-black">-</button>
                         <span className="flex-1 text-center font-black">{numAssessments}</span>
                         <button onClick={() => {
-                          setNumAssessments(Math.min(5, numAssessments+1))}
-                          } className="w-8 h-full flex items-center justify-center font-black">+</button>
+                            if (numAssessments >= 5) return;
+                          setNumAssessments(Math.min(5, numAssessments+1));
+                          const updatedGrades = Object.fromEntries([...Object.entries(grades), [`t${numAssessments+1}`,0]]);
+                          setGrades(updatedGrades)
+
+                          }} className="w-8 h-full flex items-center justify-center font-black">+</button>
+
                     </div>
                    </div>
                 </div>
@@ -155,7 +200,7 @@ export const SubjectSimulator: React.FC<SubjectSimulatorProps> = ({ onBack, lang
            </div>
 
            {/* The Target Orb */}
-           <div className="relative p-8 rounded-[3rem] bg-gradient-to-br from-[#1C1917] to-black text-white shadow-2xl overflow-hidden group">
+           <div className=" relative p-8 rounded-[3rem] bg-gradient-to-br from-[#1C1917] to-black text-white shadow-2xl overflow-hidden group">
               <div className="absolute inset-0 bg-gradient-to-tr from-amber/10 via-transparent to-transparent opacity-50"></div>
               <div className="relative z-10 flex flex-col items-center">
                   <p className="text-[10px] font-black uppercase tracking-[0.3em] text-amber-500 mb-4">{lang === 'ar' ? 'المعدل المستهدف' : 'Objectif Global'}</p>
@@ -170,35 +215,36 @@ export const SubjectSimulator: React.FC<SubjectSimulatorProps> = ({ onBack, lang
         <div className="lg:col-span-8 space-y-8  ">
            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 ">
               {Array.from({length: numAssessments}).map((_, i) => (
-                <div key={i} className={`relative p-6 rounded-[2.5rem] bg-white/70 dark:bg-black/40 backdrop-blur-xl border border-white/60 dark:border-white/10 shadow-lg transition-all duration-500 ${disabledGrades[`t${i}`] ? 'ring-4 ring-ai/30' : ''}`}>
+                <div key={i} className={`relative p-6 rounded-[2.5rem] bg-white/70 dark:bg-black/40  backdrop-blur-xl border border-white/60 dark:border-white/10 shadow-lg transition-all duration-500 ${disabledGrades[`t${i+1}`] ? 'dark:bg-gray-900 bg-gray-900' : ''}`}>
                     <div className="flex justify-between items-center mb-4">
                         <span className="text-[11px] font-black text-gray-400 uppercase tracking-widest">{lang === 'ar' ? `الفرض ${i+1}` : `Devoir ${i+1}`}</span>
                         <button onClick={() => {
-                            const newState = { [`t${i}`]: !disabledGrades[`t${i}`] };
+                            const newState = { [`t${i+1}`]: !disabledGrades[`t${i+1}`] };
                             setDisabledGrades(newState); // Only one can be missing for "needed" logic
-                        }} className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${disabledGrades[`t${i}`] ? 'bg-ai text-white shadow-lg' : 'bg-gray-100 dark:bg-white/5 text-gray-400 hover:text-ai'}`}>
-                            {disabledGrades[`t${i}`] ? '✨' : '?'}
+                            setGrades(prevGrades=>({...prevGrades,[`t${i+1}`]  : 0 }))
+                        }} className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${disabledGrades[`t${i+1}`] ? 'bg-ai text-white shadow-lg' : 'bg-gray-100 dark:bg-white/5 text-gray-400 hover:text-ai'}`}>
+                            {disabledGrades[`t${i+1}`] ? '✨' : '?'}
                         </button>
                     </div>
                     <div className="relative">
                         <input 
-                            disabled={disabledGrades[`t${i}`]}
+                            disabled={disabledGrades[`t${i+1}`]}
                             type="number" 
-                            value={disabledGrades[`t${i}`] ? (result.type === 'needed' ? result.val.toFixed(2) : '...') : (grades[`t${i}`] || '')} 
-                            onChange={(e) => {
+                            value={disabledGrades[`t${i+1}`] ? (result.type === 'needed' && result.val>=0 ? result.val.toFixed(2) : '...') : (grades[`t${i+1}`] || '')} 
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => { 
                               console.log('onChange triggered'); // Debug
-                              handleChange(e, `t${i}`);
+                              handleChange(e, `t${i+1}`);
                             }}
                             placeholder="00.00"
-                            className={`w-full h-16 rounded-2xl bg-white dark:bg-black/40 text-center font-heading font-black text-2xl transition-all border-none outline-none ${disabledGrades[`t${i}`] ? 'text-ai bg-ai/5' : 'text-ink dark:text-white'}`}
+                            className={`w-full h-16  rounded-2xl bg-white dark:bg-black/40 text-center font-heading font-black text-2xl transition-all border-none outline-none ${disabledGrades[`t${i+1}`] ? 'text-ai bg-ai/5' : 'text-ink dark:text-white'}  [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none` }
                         />
-                        {disabledGrades[`t${i}`] && <div className="absolute inset-0 bg-white/5 animate-shimmer pointer-events-none rounded-2xl"></div>}
+                        {/* {disabledGrades[`t${i+1}`] && <div className="absolute inset-0 bg-white/5 animate-shimmer pointer-events-none rounded-2xl z-1"></div>} */}
                     </div>
                 </div>
               ))}
 
               {hasActivities && (
-                <div className={`relative p-6 rounded-[2.5rem] bg-white/70 dark:bg-black/40 backdrop-blur-xl border border-white/60 dark:border-white/10 shadow-lg transition-all duration-500 ${disabledGrades['act'] ? 'ring-4 ring-ai/30' : ''}`}>
+                <div className={`relative p-6 rounded-[2.5rem] bg-white/70 dark:bg-black/40 backdrop-blur-xl border border-white/60 dark:border-white/10 shadow-lg transition-all duration-500 ${disabledGrades['act'] ? 'dark:bg-green-900 bg-green-900' : ''}`}>
                     <div className="flex justify-between items-center mb-4">
                         <span className="text-[11px] font-black text-gray-400 uppercase tracking-widest">{t.activities}</span>
                         <button onClick={() => setDisabledGrades({ 'act': !disabledGrades['act'] })} className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${disabledGrades['act'] ? 'bg-ai text-white shadow-lg' : 'bg-gray-100 dark:bg-white/5 text-gray-400 hover:text-ai'}`}>
@@ -210,9 +256,10 @@ export const SubjectSimulator: React.FC<SubjectSimulatorProps> = ({ onBack, lang
                             disabled={disabledGrades['act']}
                             type="number" 
                             value={disabledGrades['act'] ? (result.type === 'needed' ? result.val.toFixed(2) : '...') : (grades['act'] || '')} 
-                            onChange={e => handleChange(e, "act")}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e, "act")}
                             placeholder="00.00"
-                            className={`w-full h-16 rounded-2xl bg-white dark:bg-black/40 text-center font-heading font-black text-2xl transition-all border-none outline-none ${disabledGrades['act'] ? 'text-ai bg-ai/5' : 'text-ink dark:text-white'}`}
+                            className={`w-full h-16 rounded-2xl bg-white dark:bg-black/40 text-center font-heading font-black text-2xl transition-all border-none outline-none ${disabledGrades['act'] ? 'text-ai bg-ai/5' : 'text-ink dark:text-white'}
+                            [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
                         />
                     </div>
                 </div>
@@ -245,13 +292,25 @@ export const SubjectSimulator: React.FC<SubjectSimulatorProps> = ({ onBack, lang
                 ) : (
                     <div className="animate-fade-in">
                         <p className="text-[11px] font-black uppercase tracking-[0.3em] text-gray-400 mb-6">{lang === 'ar' ? 'المعدل الحالي للمادة' : 'Moyenne Actuelle'}</p>
-                        <div className="flex items-center justify-center gap-4">
+                        <div className="flex items-center justify-center gap-2 pt-6 md:pt-0">
                             <div className="text-8xl font-heading font-black tracking-tighter tabular-nums text-ink dark:text-white">{result.val.toFixed(2)}</div>
                             <span className="text-2xl text-gray-300 font-light pt-8">/ 20</span>
                         </div>
-                        <div className="mt-8 text-sm font-serif italic text-gray-500">{lang === 'ar' ? 'اضغط على علامة الاستفهام أعلاه لتعطيل إدخال وتوقع نتيجته.' : 'Désactivez une note pour voir ce qu\'il vous manque.'}</div>
+                        <div className="mt-4 text-sm font-serif italic text-gray-500">{lang === 'ar' ? 'اضغط على علامة الاستفهام أعلاه لتعطيل إدخال وتوقع نتيجته.' : 'Désactivez une note pour voir ce qu\'il vous manque.'}</div>
+                       
+                        <div className={`${result.val >= target ? "bg-success/10 text-success" : "bg-ai/10 text-ai"} mt-4 inline-flex items-center gap-2 px-6 py-4 rounded-full   text-[15px] font-black uppercase tracking-widest`}>
+                                    {result.val >= target ? (lang === 'ar' ? '🎉 هدفك محقق' : '🎉 Objectif Atteint') : (lang === 'ar' ? '🚧 أقل من الهدف' : "🚧 Sous l'objectif")}
+                        </div>
                     </div>
                 )}
+
+                 <div className=" wavy-circle flex justify-center items-center absolute bg-gradient-to-br from-amber-600 via-amber-glow to-yellow-200 shadow-2xl shadow-amber/40 top-0 right-0 m-2">
+                          
+                          <div>
+                          <h2 className="font-bold text-amber-900 text-xl">{((result.val * parseFloat(coeff))).toFixed(2)}</h2>
+                            <p className="text-md text-amber-800">pt</p>
+                          </div>
+                  </div>
                 
                 {/* Decorative Pearl Glow */}
                 <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-ai/5 rounded-full blur-[60px]"></div>
