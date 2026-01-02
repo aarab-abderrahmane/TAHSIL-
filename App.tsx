@@ -460,6 +460,7 @@ const App: React.FC = () => {
       }));
   };
 
+
   const handleRegionalExamInput = (subjectId: string, value: string) => {
       if (!/^\d*\.?\d*$/.test(value)) return;
       if (parseFloat(value) > 20) return;
@@ -475,7 +476,7 @@ const App: React.FC = () => {
           alert(lang === 'ar' ? "الرجاء اختيار الشعبة أولاً" : "Veuillez choisir une filière");
           return;
       }
-      const en = parseFloat(nationalGrade) || 0;
+      const en = parseFloat(nationalGrade) || 0;    
       const er = parseFloat(regionalGrade) || 0;
       const cc = parseFloat(continuousGrade) || 0;
       const avg = (en * 0.5) + (er * 0.25) + (cc * 0.25);
@@ -618,13 +619,11 @@ const App: React.FC = () => {
         if (!data) return true;
         if (data.isPending) return false;
 
-        console.log(data.assessments)
         
         const assessmentsFilled = data.assessments.every(a => a.value.trim() !== '');
         const needsActivities = subject.hasActivities ?? true;
         const activitiesFilled = !needsActivities || (data.activitiesMark !== undefined && data.activitiesMark.trim() !== '');
         
-        console.log(subject.id , assessmentsFilled , subject.hasActivities , activitiesFilled)
 
         // console.log(subject.id , data , assessmentsFilled , activitiesFilled)
         if(subject.id==="assiduite") return !assessmentsFilled;
@@ -632,7 +631,6 @@ const App: React.FC = () => {
         return !assessmentsFilled || !activitiesFilled;
     });
 
-    console.log("missingfields",missingFields)
 
     if (missingFields.length > 0) {
         setToastMessage(lang === 'ar' ? 'المرجو ملء جميع النقط أو تحديد المادة كـ "غير مكتملة"' : 'Veuillez remplir toutes les notes');
@@ -661,6 +659,7 @@ const App: React.FC = () => {
             pendingSubjectsList.push(subject);
             totalCoeffs += subject.coefficient;
         } else {
+            const testWeight = (1 - activitiesWeight) ;
             const assessmentGrades = subjectData.assessments
             .map(a => parseFloat(a.value))
             .filter(v => !isNaN(v));
@@ -679,8 +678,7 @@ const App: React.FC = () => {
                 // Default Morocco system (Tests *0.75 + Activity  *0. 25) 
 
 
-                subjectAverage =  (testsAvg * 0.75) + (activityMark*0.25)
-                console.log(subjectAverage)
+                subjectAverage =  (testsAvg * testWeight) + (activityMark*activitiesWeight)
 
             } else if (testsAvg !== null) {
                 subjectAverage = testsAvg;
@@ -734,7 +732,8 @@ const App: React.FC = () => {
         avg = (testsAvg * (1 - activitiesWeight)) + (activityMark * activitiesWeight);
       } else if (testsAvg !== null && activityMark !== null) {
         
-        avg = (testsAvg * 0.75) + (activityMark * 0.25)
+        const testWeight = 1 - activitiesWeight
+        avg = (testsAvg * testWeight) + (activityMark * activitiesWeight)
         
       } else if (testsAvg !== null) {
         avg = testsAvg;

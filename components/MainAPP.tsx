@@ -679,7 +679,7 @@ export const MainApp : React.FC<MainAppProps> = ({
             
              {calcMode === 'continuous' && (
                 <div className="max-w-xl mx-auto mb-16 relative">
-                    <div className="absolute -inset-2 bg-blue-500 from-indigo-100/50 via-white to-teal-50/50 dark:from-white/5 dark:via-transparent dark:to-white/5 rounded-[2.5rem] blur-xl opacity-30"></div>
+                    <div className="absolute -inset-2 bg-black from-indigo-100/50 via-white to-teal-50/50 dark:from-white/5 dark:via-transparent dark:to-white/5 rounded-[2.5rem] blur-xl opacity-30"></div>
                     <div className="relative bg-white/40 dark:bg-black/20 backdrop-blur-xl rounded-[2.5rem] p-5 border border-white/60 dark:border-white/5 shadow-2xl flex flex-col gap-5 overflow-hidden">
                         <div className="flex items-center justify-between px-2">
                              <div className="flex items-center gap-3">
