@@ -1002,8 +1002,8 @@ export const MainApp : React.FC<MainAppProps> = ({
                             <div className="flex-1 relative h-6 flex items-center">
                                 <input 
                                     type="range" 
-                                    min="0.01" 
-                                    max="0.99" 
+                                    min="0" 
+                                    max="1" 
                                     step="0.01" 
                                     value={activitiesWeight} 
                                     onChange={(e) => { setActivitiesWeight(parseFloat(e.target.value)); setIsTemplateSaved(false); }} 
@@ -1029,7 +1029,7 @@ export const MainApp : React.FC<MainAppProps> = ({
                             <button onClick={handleDeleteAllSubjects} title={t.btnDescDelete} className="flex-1 px-4 py-3 rounded-2xl bg-white dark:bg-black/20 text-danger font-bold transition-all hover:bg-danger/10">{t.deleteAll}</button>
                             <button onClick={handleClearAllGrades} title={t.btnDescClear} className="flex-1 px-4 py-3 rounded-2xl bg-white dark:bg-black/20 text-amber font-bold transition-all hover:bg-amber/10">{t.clearGrades}</button>
                             <button onClick={handleSaveTemplateWithGrades} title={t.btnDescSaveGrades} className="flex-1 px-4 py-3 rounded-2xl bg-white dark:bg-black/20 text-ai font-bold transition-all hover:bg-ai/10">{t.saveWithGrades}</button>
-                         </div>
+                         </div> 
                         {activeSubjects.map((subject) => (
                             <GradeInputRow key={subject.id} subject={subject}  assessments={grades[subject.id]?.assessments || []} activitiesMark={grades[subject.id]?.activitiesMark} isPending={grades[subject.id]?.isPending} onUpdate={handleUpdateGrades} onDeleteSubject={() => handleDeleteSubject(subject.id)} isCustomMode={true} onUpdateSubjectDetails={handleUpdateSubjectDetails} lang={lang} />
                         ))}

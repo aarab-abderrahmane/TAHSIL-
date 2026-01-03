@@ -227,7 +227,8 @@ const App: React.FC = () => {
 
   const enterCustomMode = (type: 'continuous' | 'exam') => {
       setCustomType(type);
-      
+      setGrades({});
+
       if (type === 'continuous') {
         setCalcMode('continuous');
         setCurrentStep(AppStep.CUSTOM_MODE);
@@ -279,6 +280,8 @@ const App: React.FC = () => {
       }
   };
 
+  console.log("gr",grades , "activeSubjects", activeSubjects);
+
   const handleAddCustomSubject = () => {
       const newId = `custom_${Date.now()}`;
       const newSubject: Subject = {
@@ -317,11 +320,19 @@ const App: React.FC = () => {
           setShowToast(true);
           return;
       }
+
+      const lastgrades = localStorage.getItem(customType === 'continuous' ? 'tahsil_custom_template' : 'tahsil_custom_exam_template');
+
+      console.log("last",JSON.parse(lastgrades))
       const template = {
           date: new Date().toISOString(),
           subjects: activeSubjects,
-          activitiesWeight: activitiesWeight
+          activitiesWeight: activitiesWeight,
+          grades : lastgrades ? JSON.parse(lastgrades).grades || {} : {}
       };
+
+      console.log("temp" , template)
+
       const storageKey = customType === 'continuous' ? 'tahsil_custom_template' : 'tahsil_custom_exam_template';
       localStorage.setItem(storageKey, JSON.stringify(template));
       setIsTemplateSaved(true);
@@ -341,6 +352,8 @@ const App: React.FC = () => {
           activitiesWeight: activitiesWeight,
           grades: grades
       };
+
+      console.log("temp" , template)
       const storageKey = customType === 'continuous' ? 'tahsil_custom_template' : 'tahsil_custom_exam_template';
       localStorage.setItem(storageKey, JSON.stringify(template));
       setIsTemplateSaved(true);
@@ -349,33 +362,41 @@ const App: React.FC = () => {
   };
 
   const handleDeleteAllSubjects = () => {
-      if (window.confirm(lang === 'ar' ? 'هل أنت متأكد من حذف جميع المواد؟' : 'Supprimer toutes les matières ?')) {
+    //   if (window.confirm(lang === 'ar' ? 'هل أنت متأكد من حذف جميع المواد؟' : 'Supprimer toutes les matières ?')) {
+         const storageKey = customType === 'continuous' ? 'tahsil_custom_template' : 'tahsil_custom_exam_template';
+         localStorage.removeItem(storageKey);
           setActiveSubjects([]);
           setGrades({});
           setIsTemplateSaved(false);
           setToastMessage(lang === 'ar' ? 'تم حذف جميع المواد' : 'Matières supprimées');
           setShowToast(true);
-      }
+    //   }
   };
 
   const handleClearAllGrades = () => {
-      if (window.confirm(lang === 'ar' ? 'هل أنت متأكد من تفريغ جميع النقط؟' : 'Vider toutes les notes ?')) {
-          setGrades(prev => {
-              const newGrades = { ...prev };
-              Object.keys(newGrades).forEach(key => {
-                  if (newGrades[key]) {
-                      newGrades[key] = {
-                          ...newGrades[key],
-                          assessments: newGrades[key].assessments.map(a => ({ ...a, value: '' })),
-                          activitiesMark: ''
-                      };
-                  }
-              });
-              return newGrades;
-          });
-          setToastMessage(lang === 'ar' ? 'تم تفريغ النقط' : 'Notes vidées');
-          setShowToast(true);
-      }
+    //   if (window.confirm(lang === 'ar' ? 'هل أنت متأكد من تفريغ جميع النقط؟' : 'Vider toutes les notes ?')) {
+        const newGrades =  {...grades}
+
+        Object.keys(newGrades).forEach(key => {
+            if (newGrades[key]) {
+                newGrades[key] = {
+                    ...newGrades[key],
+                    assessments: newGrades[key].assessments.map(a => ({ ...a, value: '' })),
+                    activitiesMark: ''
+                };
+            }
+        });
+
+        setGrades(newGrades)
+
+        const storageKey = customType === 'continuous' ? 'tahsil_custom_template' : 'tahsil_custom_exam_template';
+        const lastTemplate = localStorage.getItem(storageKey);
+        lastTemplate ?  localStorage.setItem(storageKey , JSON.stringify({...JSON.parse(lastTemplate) , grades : newGrades })) : null ;
+
+        console.log(grades , storageKey)
+
+        setToastMessage(lang === 'ar' ? 'تم تفريغ النقط' : 'Notes vidées');
+        setShowToast(true);
   };
   
   const handleSelectMode = (mode: 'continuous' | 'general' | 'simulator' | 'national_exam' | 'regional_exam') => {
