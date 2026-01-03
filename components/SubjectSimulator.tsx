@@ -1,8 +1,64 @@
 
 import React, { useState, useEffect } from 'react';
 import { Language, translations } from '../translations';
-import test from 'node:test';
-import { p } from 'motion/react-client';
+
+
+
+type CalcResult =
+  | { type: 'current'; val: number }
+  | { type: 'needed'; val: number };
+
+export function calculateResult(
+  grades: Record<string, number>,
+  disabled: Record<string, boolean>,
+  target: number,
+  actWeight: number,
+  hasActivities: boolean,
+  numAssessments: number
+): CalcResult {
+  const testWeight = 1 - (hasActivities ? actWeight : 0);
+
+  console.log("grades,,,,,,,",grades)
+  const tests: number[] = [];
+  let act = 0;
+
+  let missingTest = false;
+  let missingAct = false;
+
+  for (let i = 1; i <= numAssessments; i++) {
+    const key = `t${i}`;
+    if (disabled[key]) missingTest = true;
+    tests.push(parseFloat(grades[key]) ?? 0);
+  }
+
+
+  if (hasActivities) {
+    if (disabled.act) missingAct = true;
+    else act = parseFloat(grades.act) ?? 0;
+  }
+
+  const sumTests = tests.reduce((a, b) => a + b, 0);
+  const avgTests = tests.length ? sumTests / tests.length : 0;
+
+  if (missingTest) {
+    console.log(target, act , actWeight , testWeight , tests,sumTests)
+    const needed = ((target - (act*actWeight)) / testWeight ) * tests.length - sumTests
+    return { type: 'needed', val: needed };
+
+  }
+
+  if (missingAct && hasActivities) {
+    const needed =
+      (target - avgTests * testWeight) / actWeight;
+    return { type: 'needed', val: needed };
+  }
+
+  return {
+    type: 'current',
+    val: avgTests * testWeight + act * actWeight,
+  };
+}
+
 
 interface SubjectSimulatorProps {
   onBack: () => void;
@@ -14,7 +70,7 @@ export const SubjectSimulator: React.FC<SubjectSimulatorProps> = ({ onBack, lang
 
   // Config
   const [name, setName] = useState('');
-  const [coeff, setCoeff] = useState(1);
+  const [coeff, setCoeff] = useState(2);
   const [numAssessments, setNumAssessments] = useState(2);
   const [hasActivities, setHasActivities] = useState(true);
   const [actWeight, setActWeight] = useState(0.25);
@@ -31,7 +87,7 @@ export const SubjectSimulator: React.FC<SubjectSimulatorProps> = ({ onBack, lang
 
 
     if(value ===""){
-      setGrades({...grades ,[i] : '' })
+      setGrades({...grades ,[i] : 0 })
       return;
     }
 
@@ -45,81 +101,41 @@ export const SubjectSimulator: React.FC<SubjectSimulatorProps> = ({ onBack, lang
 
   useEffect(()=>{
 
-      for (let i = 1; i <= numAssessments ; i++){
-          grades[`t${i}`] = grades[`t${i}`] || 0
-      }
-      
-      hasActivities && (grades['act'] = grades['act'] || 0)
+      setGrades(prev=>{
+        const next = {...prev};
+        for (let i = 1 ; i <= numAssessments ; i++){
+          if (next[`t${i}`]===undefined) next[`t${i}`] = 0;
+        }
 
+        if(hasActivities && next.act === undefined) next.act = 0
+        
+        return next
+      })
 
-  },[])
+  },[numAssessments , hasActivities])
 
 
 
   const updateCoeff = (value: string) => {
 
     if (!/^\d*$/.test(value)) return;
-    if (parseFloat(value) <= 0 || parseFloat(value) > 20) return; 
+    if (parseInt(value) <= 0 || parseInt(value) > 20) return; 
 
     setCoeff(value);
 
   }
 
 
-  const calculateNeeded = () => {
-    const testWeight = (1 - (hasActivities ? actWeight : 0)) ;
+console.log(coeff)
 
-
-    let currentScore = 0;
-    let tests=[]
-
-    console.log("grades",grades,Object.entries(grades))
-
-    let missingGrades = {act : false , Cont : false , count : 0}
-    if(grades){
-      Object.entries(grades).forEach(([key, value]) => {
-        if (disabledGrades[key]) {
-
-          console.log("disbledgrades", disabledGrades , key)
-
-          key === "act"?  missingGrades["act"] = true : missingGrades["Cont"] = true 
-
-        } 
-          key==="act" ?  currentScore += (parseFloat(value) || 0) * actWeight : tests.push(parseFloat(value) || 0)
-         
-      });
-    }
-
-
-
-    const sumTests = tests.reduce((acc,curr)=>acc+curr,0)
-    if (missingGrades["Cont"] ){
-
-      const needed = ((target - ((parseFloat(grades['act']) || 0 )*actWeight)) / testWeight ) * tests.length - sumTests
-
-       return { val: needed, type: 'needed' };
-
-    }else{
-
-      if( missingGrades["act"] ){
-          const needed = (((sumTests /tests.length) * testWeight  - target ) / actWeight ) * -1
-         return { val: needed, type: 'needed' };
-
-      }
-    }
-
-
-
-
-    currentScore+= (sumTests / tests.length) * testWeight
-
-    return { type: 'current' , val: currentScore};
-
-
-  };
-
-
-  const result = calculateNeeded();
+  const result = calculateResult(
+    grades ,
+    disabledGrades,
+    target,
+    actWeight,
+    hasActivities,
+    numAssessments
+  );
   const isImpossible = result.type === 'needed' && result.val > 20;
 
   return (
@@ -255,7 +271,7 @@ export const SubjectSimulator: React.FC<SubjectSimulatorProps> = ({ onBack, lang
                         <input 
                             disabled={disabledGrades['act']}
                             type="number" 
-                            value={disabledGrades['act'] ? (result.type === 'needed' ? result.val.toFixed(2) : '...') : (grades['act'] || '')} 
+                            value={disabledGrades['act'] ? (result.type === 'needed' ? result.val.toFixed(2) : '...') : (grades['act'] || 0)} 
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e, "act")}
                             placeholder="00.00"
                             className={`w-full h-16 rounded-2xl bg-white dark:bg-black/40 text-center font-heading font-black text-2xl transition-all border-none outline-none ${disabledGrades['act'] ? 'text-ai bg-ai/5' : 'text-ink dark:text-white'}
@@ -304,10 +320,10 @@ export const SubjectSimulator: React.FC<SubjectSimulatorProps> = ({ onBack, lang
                     </div>
                 )}
 
-                 <div className=" wavy-circle flex justify-center items-center absolute bg-gradient-to-br from-amber-600 via-amber-glow to-yellow-200 shadow-2xl shadow-amber/40 top-0 right-0 m-2">
+                 <div className=" wavy-circle flex justify-center items-center absolute bg-gradient-to-br from-black/10 via-amber-100 to-black/40 shadow-2xl shadow-amber/40 top-0 right-0 m-2">
                           
                           <div>
-                          <h2 className="font-bold text-amber-900 text-xl">{((result.val * parseFloat(coeff))).toFixed(2)}</h2>
+                          <h2 className="font-bold text-amber-900 text-xl">{((result.val * (coeff ?  parseFloat(coeff) : 1 ) )).toFixed(2)}</h2>
                             <p className="text-md text-amber-800">pt</p>
                           </div>
                   </div>
