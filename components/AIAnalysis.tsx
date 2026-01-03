@@ -30,6 +30,7 @@ export const AIAnalysis: React.FC<AIAnalysisProps> = ({ grades, stream, level, l
 
 
         const Fingerprint = await getFingerprint()
+        
         const response = await axios.post(
             `${import.meta.env.VITE_TAHSIL_BACKEND_URL}analyze-grades`,
             {grades,stream,level,lang},

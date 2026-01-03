@@ -280,7 +280,6 @@ const App: React.FC = () => {
       }
   };
 
-  console.log("gr",grades , "activeSubjects", activeSubjects);
 
   const handleAddCustomSubject = () => {
       const newId = `custom_${Date.now()}`;
@@ -323,7 +322,6 @@ const App: React.FC = () => {
 
       const lastgrades = localStorage.getItem(customType === 'continuous' ? 'tahsil_custom_template' : 'tahsil_custom_exam_template');
 
-      console.log("last",JSON.parse(lastgrades))
       const template = {
           date: new Date().toISOString(),
           subjects: activeSubjects,
@@ -331,7 +329,6 @@ const App: React.FC = () => {
           grades : lastgrades ? JSON.parse(lastgrades).grades || {} : {}
       };
 
-      console.log("temp" , template)
 
       const storageKey = customType === 'continuous' ? 'tahsil_custom_template' : 'tahsil_custom_exam_template';
       localStorage.setItem(storageKey, JSON.stringify(template));
@@ -353,7 +350,6 @@ const App: React.FC = () => {
           grades: grades
       };
 
-      console.log("temp" , template)
       const storageKey = customType === 'continuous' ? 'tahsil_custom_template' : 'tahsil_custom_exam_template';
       localStorage.setItem(storageKey, JSON.stringify(template));
       setIsTemplateSaved(true);
@@ -393,7 +389,6 @@ const App: React.FC = () => {
         const lastTemplate = localStorage.getItem(storageKey);
         lastTemplate ?  localStorage.setItem(storageKey , JSON.stringify({...JSON.parse(lastTemplate) , grades : newGrades })) : null ;
 
-        console.log(grades , storageKey)
 
         setToastMessage(lang === 'ar' ? 'تم تفريغ النقط' : 'Notes vidées');
         setShowToast(true);
@@ -563,13 +558,15 @@ const App: React.FC = () => {
 
   const calculateRegionalExamResult = () => {
       if (!selectedStream) return;
+
       
-      const regionalSubjects = ['fr', 'ar', 'hg', 'ei'];
-      const subjectsToCalc = selectedStream.subjects.filter(s => regionalSubjects.includes(s.id));
+      const regionalSubjects = ['french', 'arabic', 'history', 'islamic'];
+      const subjectsToCalc = selectedStream.regional_exam_subjects?.filter(s => regionalSubjects.includes(s.id));
 
       let totalScore = 0;
       let totalCoeffs = 0;
       let hasError = false;
+
 
       subjectsToCalc.forEach(sub => {
           const gradeStr = regionalExamGrades[sub.id];
@@ -586,6 +583,7 @@ const App: React.FC = () => {
           setShowToast(true);
           return;
       }
+
 
       setFinalAverage(totalCoeffs > 0 ? totalScore / totalCoeffs : 0);
       setCurrentStep(AppStep.RESULTS);
@@ -632,11 +630,8 @@ const App: React.FC = () => {
         return;
     }
 
-    // console.log(activeSubjects)
-    // console.log(grades)
     const missingFields = activeSubjects.filter(subject => {
         const data = grades[subject.id];
-        // console.log(data,subject.id)
         if (!data) return true;
         if (data.isPending) return false;
 
@@ -646,7 +641,6 @@ const App: React.FC = () => {
         const activitiesFilled = !needsActivities || (data.activitiesMark !== undefined && data.activitiesMark.trim() !== '');
         
 
-        // console.log(subject.id , data , assessmentsFilled , activitiesFilled)
         if(subject.id==="assiduite") return !assessmentsFilled;
         
         return !assessmentsFilled || !activitiesFilled;
@@ -666,12 +660,10 @@ const App: React.FC = () => {
     let completedCoeffs = 0; 
     const pendingSubjectsList: Subject[] = [];
 
-    console.log(grades)
 
     activeSubjects.forEach(subject => {
       const subjectData = grades[subject.id];
 
-      console.log("subject",subject.id , subject.coefficient)
       
       
       absoluteTotalCoeffs += subject.coefficient;
@@ -714,7 +706,6 @@ const App: React.FC = () => {
         }
       }
     });
-// console.log("totalPoints",totalPoints , "totalCoeffs",totalCoeffs , absoluteTotalCoeffs)
     const average = totalCoeffs > 0 ? totalPoints / totalCoeffs : 0;
     setCoachData({
         pendingSubjects: pendingSubjectsList,

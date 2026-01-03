@@ -18,7 +18,6 @@ export function calculateResult(
 ): CalcResult {
   const testWeight = 1 - (hasActivities ? actWeight : 0);
 
-  console.log("grades,,,,,,,",grades)
   const tests: number[] = [];
   let act = 0;
 
@@ -126,7 +125,6 @@ export const SubjectSimulator: React.FC<SubjectSimulatorProps> = ({ onBack, lang
   }
 
 
-console.log(coeff)
 
   const result = calculateResult(
     grades ,

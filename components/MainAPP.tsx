@@ -240,7 +240,6 @@ export const MainApp : React.FC<MainAppProps> = ({
     setSelectedLevel = () => {},
     setSelectedStream = () => {},
 })=>{
-    console.log(activeSubjects)
     const t = translations[lang];
 
     const cardSubjectsCount = (stream: Stream) => {
@@ -253,7 +252,6 @@ export const MainApp : React.FC<MainAppProps> = ({
         }
     }
     
-    console.log("grades ",grades)
     return (
         <>
         {/* Custom Mode Intro Modal */}
