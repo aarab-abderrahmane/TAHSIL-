@@ -44,6 +44,9 @@ export const translations = {
     levelSelectDesc: 'لنبدأ رحلة التخطيط للنجاح',
     firstBac: 'الأولى باكالوريا',
     firstBacDesc: 'التركيز على الامتحان الجهوي',
+    objectSimulator: 'محاكي المادة',
+    objectSimulatorDesc: 'يحسب مجموع النقاط للمادة',
+
     secondBac: 'الثانية باكالوريا',
     secondBacDesc: 'الاستعداد للامتحان الوطني',
     customStream: 'مساري غير موجود هنا',
@@ -219,6 +222,8 @@ export const translations = {
     levelSelectDesc: 'Commençons votre planification',
     firstBac: '1ère Année Bac',
     firstBacDesc: 'Focus sur l\'Examen Régional',
+    objectSimulator: 'Simulateur de Matière',
+    objectSimulatorDesc: 'Calcule le total des points pour une matière',
     secondBac: '2ème Année Bac',
     secondBacDesc: 'Préparation à l\'Examen National',
     customStream: 'Mon parcours n\'est pas listé',

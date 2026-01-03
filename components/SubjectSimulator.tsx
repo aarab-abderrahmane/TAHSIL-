@@ -320,7 +320,7 @@ console.log(coeff)
                     </div>
                 )}
 
-                 <div className=" wavy-circle flex justify-center items-center absolute bg-gradient-to-br from-black/10 via-amber-100 to-black/40 shadow-2xl shadow-amber/40 top-0 right-0 m-2">
+                 <div className=" wavy-circle flex justify-center items-center absolute bg-gradient-to-br  from-black/10  via-amber-300 to-black/10 shadow-2xl shadow-amber/40 top-0 right-0 m-2">
                           
                           <div>
                           <h2 className="font-bold text-amber-900 text-xl">{((result.val * (coeff ?  parseFloat(coeff) : 1 ) )).toFixed(2)}</h2>

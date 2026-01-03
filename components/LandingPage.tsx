@@ -3,12 +3,19 @@ import React from 'react';
 import { translations, Language } from '../translations';
 import { Link } from 'react-router-dom';
 
+import { Toast } from './Toast';
+
 interface LandingPageProps {
   onStart: () => void;
   lang: Language;
+  setShowToast : (boolean) => void;
+  showToast : boolean ;
+  toastMessage : string ; 
+  setToastMessage : (string)=> void
+
 }
 
-export const LandingPage: React.FC<LandingPageProps> = ({ onStart, lang }) => {
+export const LandingPage: React.FC<LandingPageProps> = ({  lang , setShowToast ,showToast, toastMessage ,setToastMessage }) => {
   const t = translations[lang];
   
   const scrollToFeatures = () => {
@@ -17,6 +24,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onStart, lang }) => {
 
   return (
     <div className="relative w-full min-h-screen overflow-hidden text-ink dark:text-white pb-0">
+
+    {showToast && <Toast message={toastMessage} onClose={() => setShowToast(false)} type={toastMessage.includes('بنجاح') || toastMessage.includes('succès') ? 'success' : 'error'} />}
+        
       <div className="absolute inset-0 bg-zellige opacity-40 pointer-events-none -z-20"></div>
       
       <div className="relative min-h-[90vh] flex flex-col items-center justify-center text-center px-4 pt-20">
@@ -42,8 +52,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onStart, lang }) => {
                 >
                     <span className="relative flex items-center justify-center gap-3">
                     {t.startJourney}
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-6 h-6 rtl:rotate-180 ltr:rotate-0"><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5-7.5M21 12H3" /></svg>
+                    <i class="bi bi-arrow-left w-6 h-6 flex justify-center items-center text-2xl rtl:rotate-0 ltr:rotate-180"></i>
+
                     </span>
+                    
+
                 </button>
             
             </Link>
@@ -57,12 +70,20 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onStart, lang }) => {
             </span>
           </button> */}
 
-          <a href="#" className="group/android relative px-8 py-5 bg-gradient-to-b from-[#10B981] via-[#10B981] to-[#059669] rounded-full font-heading font-bold text-xl text-white animate-glow-pulse hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3 w-full sm:w-auto overflow-hidden shadow-[0_0_20px_rgba(16,185,129,0.5)]">
+          <a href="#"
+           className="group/android relative px-8 py-5 bg-gradient-to-b from-green-800 via-green-500 to-green-300 rounded-full font-heading font-bold text-xl text-white animate-glow-pulse hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3 w-auto overflow-hidden shadow-[0_0_20px_rgba(16,185,129,0.5)]"
+            onClick={ ()=>{ 
+                setToastMessage(lang === 'ar' ? 'التطبيق غير متوفر بعد' : 'L’application n’est pas encore disponible' );
+                setShowToast(true)
+            }
+              
+            }
+           >
              {/* Glossy Top Highlight */}
              <div className="absolute top-0 left-0 right-0 h-1/2 bg-gradient-to-b from-white/20 to-transparent pointer-events-none"></div>
              
              {/* Shimmer / Shine Effect */}
-             <div className="absolute inset-0 w-[50%] h-full bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-[30deg] -translate-x-full animate-shimmer pointer-events-none"></div>
+             <div className="absolute inset-0 w-[50%] h-full bg-gradient-to-r  from-transparent via-white/40 to-transparent skew-x-[30deg] -translate-x-full  pointer-events-none"></div>
 
              <svg viewBox="0 0 24 24" fill="currentColor" className="w-7 h-7 text-white transition-colors relative z-10">
                 <path d="M16.6066 4.96574L18.4239 1.81598C18.5297 1.63285 18.4674 1.3986 18.2842 1.29285C18.1011 1.18709 17.8669 1.24939 17.7611 1.43252L15.9084 4.64369C13.4347 3.51139 10.5653 3.51139 8.09156 4.64369L6.23886 1.43252C6.13311 1.24939 5.89886 1.18709 5.71573 1.29285C5.53259 1.3986 5.4703 1.63285 5.57605 1.81598L7.39343 4.96574C3.65585 7.00949 1.09673 10.9572 1.00049 15.5H22.9995C22.9033 10.9572 20.3441 7.00949 16.6066 4.96574ZM6.5 11.5C5.94772 11.5 5.5 11.0523 5.5 10.5C5.5 9.94772 5.94772 9.5 6.5 9.5C7.05228 9.5 7.5 9.94772 7.5 10.5C7.5 11.0523 7.05228 11.5 6.5 11.5ZM17.5 11.5C16.9477 11.5 16.5 11.0523 16.5 10.5C16.5 9.94772 16.9477 9.5 17.5 9.5C18.0523 9.5 18.5 9.94772 18.5 10.5C18.5 11.0523 18.0523 11.5 17.5 11.5Z" />
@@ -95,7 +116,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onStart, lang }) => {
                 <div className="absolute inset-0 bg-gradient-to-r from-olive via-amber to-ai opacity-20 dark:opacity-40 rounded-full"></div>
                 <div className="absolute inset-0 w-full h-full border-t-2 border-dashed border-gray-300 dark:border-white/20"></div>
                 {/* Animated traveler dot */}
-                <div className="absolute top-1/2 left-0 w-3 h-3 bg-olive rounded-full -translate-y-[60%] animate-[shimmer_4s_infinite_linear]" style={{ offsetPath: 'path("M0,0 H1000")' }}></div>
+                {/* <div className="absolute top-1/2 left-0 w-3 h-3 bg-olive rounded-full -translate-y- [60%] animate-[shimmer_4s_infinite_linear]" style={{ offsetPath: 'path("M0,0 H1000")' }}></div> */}
             </div>
 
             {/* Mobile Vertical Line */}
@@ -127,11 +148,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onStart, lang }) => {
                             
                             {/* Dropline for Desktop visual connection */}
                             <div className="hidden md:block absolute top-full left-1/2 w-0.5 h-8 bg-gray-200 dark:bg-white/10 -translate-x-1/2 group-hover:bg-current transition-colors"></div>
+
                         </div>
 
                         {/* Content Card (Paper/Note style) */}
                         <div className="flex-1 md:mt-8 order-1 md:order-2 w-full">
-                            <div className="glass-card p-6 rounded-[2rem] border-2 border-transparent hover:border-white/50 dark:hover:border-white/10 group-hover:-translate-y-2 transition-transform duration-300 relative bg-white/60 dark:bg-white/5">
+                            <div className=" p-6 rounded-[2rem] border-2 border-transparent group-hover:-translate-y-2 transition-transform duration-300 relative ">
                                 {/* Connector arrow for mobile */}
                                 <div className="md:hidden absolute top-1/2 -right-3 rtl:-right-3 ltr:-left-3 w-3 h-3 bg-white/60 dark:bg-[#292524] rotate-45 border-t border-r border-transparent group-hover:border-white/50 -translate-y-1/2"></div>
                                 
@@ -236,9 +258,17 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onStart, lang }) => {
             <div className="text-start">
                  <h3 className="font-heading font-bold text-xl text-ink dark:text-white mb-6 flex items-center gap-2"><span className="w-8 h-1 bg-amber rounded-full"></span>{t.contactUs}</h3>
                  <div className="flex gap-4">
-                     <button className="w-12 h-12 rounded-2xl bg-white dark:bg-white/5 flex items-center justify-center text-gray-400 hover:bg-olive hover:text-white transition-all shadow-sm">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" /></svg>
-                     </button>
+                    
+                    <a
+                        href="https://mail.google.com/mail/?view=cm&fs=1&to=abderrahmanerb.contact@gmail.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="bg-red-600 p-2 rounded-xl"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 "><path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" /></svg>
+                        
+                    </a>
+
                  </div>
             </div>
         </div>

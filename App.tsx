@@ -901,7 +901,7 @@ const App: React.FC = () => {
 
         <Routes>
             <Route path="*" element={<NotFound lang={lang} />}></Route>
-            <Route path="/" element={<LandingPage onStart={handleStartApp} lang={lang} />} />
+            <Route path="/" element={<LandingPage onStart={handleStartApp} lang={lang} toastMessage={toastMessage} setShowToast={setShowToast} showToast={showToast} setToastMessage={setToastMessage} />} />
             <Route path="/privacy" element={<PrivacyPolicy  lang={lang}/>} />
             <Route path="/app" element={
                 <MainApp 
